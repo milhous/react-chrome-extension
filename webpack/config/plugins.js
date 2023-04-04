@@ -75,9 +75,6 @@ export default function plugins(devConfig, basicConfig) {
     new HtmlWebpackPlugin({
       title: basicConfig.name,
       template: basicConfig.public + '/index.html',
-      inject: true,
-      minify: false,
-      chunks: ['index'],
     }),
   ];
 

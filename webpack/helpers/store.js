@@ -1,5 +1,7 @@
-import {resolvePath} from './utils.js';
+import {resolvePath, readJson} from './utils.js';
 import {ModeType} from './types.js';
+
+const packageJson = readJson('./package.json');
 
 // 配置
 class Store {
@@ -15,7 +17,7 @@ class Store {
   // 是否需要分析
   _analyze = false;
   // browserslist
-  _browserslist = ['>0.2%', 'not dead', 'not op_mini all'];
+  _browserslist = packageJson.browserslist.production;
   // 公共路径
   _publicPath = 'auto';
 
@@ -92,7 +94,7 @@ class Store {
     this._isDev = mode === ModeType.DEVELOPMENT;
 
     if (this._isDev) {
-      this._browserslist = ['last 1 chrome version', 'last 1 firefox version', 'last 1 safari version'];
+      this._browserslist = packageJson.browserslist.development;
 
       this._publicPath = `//localhost:${this._appPort}/`;
     }

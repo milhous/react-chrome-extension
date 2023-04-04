@@ -2,6 +2,8 @@
   color: white;
   text-align: center;
   color: #333;
+
+  @apply bg-sky-500 max-w-3xl;
 }
 
 .container {

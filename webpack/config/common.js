@@ -24,7 +24,9 @@ export default function common(devConfig, basicConfig) {
 
   return {
     // 解决 HMR for federated modules ChunkLoadError: Loading hot update chunk
-    entry: basicConfig.src + '/index',
+    entry: {
+      index: basicConfig.src + '/index',
+    },
     devtool,
     mode: devConfig.mode,
     target: 'web',
@@ -82,6 +84,7 @@ export default function common(devConfig, basicConfig) {
         '.svga',
       ],
       alias: {
+        '@assets': resolvePath('./app/assets'),
         '@libs': resolvePath('./app/libs'),
         '@ui': resolvePath('./app/ui'),
         '@widget': resolvePath('./app/widget'),
