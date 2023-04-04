@@ -1,7 +1,4 @@
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import autoprefixer from 'autoprefixer';
-import postcssPxtorem from 'postcss-pxtorem';
-import postcssNormalize from 'postcss-normalize';
 
 import {createRequire} from 'module';
 

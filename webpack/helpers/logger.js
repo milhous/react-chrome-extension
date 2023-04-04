@@ -10,36 +10,20 @@ chalk.level = 1;
  * @property YELLOW 黄色
  * @property RED 红色
  */
-enum LoggerColorType {
-  'WHITE' = 0,
-  'GREEN',
-  'YELLOW',
-  'RED',
-}
-
-/**
- * 声明 - 日志
- * @method show 显示
- * @method default 默认
- * @method info 信息
- * @method warn 警告
- * @method error 错误
- */
-interface ILogger {
-  show(msg: string, type: number): void;
-  default(msg: string): void;
-  info(msg: string): void;
-  warn(msg: string): void;
-  error(msg: string): void;
-}
+const LoggerColorType = {
+  WHITE: 'white',
+  GREEN: 'green',
+  YELLOW: 'yellow',
+  RED: 'red',
+};
 
 // 日志
 class Logger {
   constructor() {}
 
-  static instance: ILogger;
+  static instance;
 
-  static getInstance(): ILogger {
+  static getInstance() {
     if (!Logger.instance) {
       Logger.instance = new Logger();
     }
@@ -52,37 +36,35 @@ class Logger {
    * @param {string} msg 消息
    * @param {number} type 类型
    */
-  public show(msg: string, type: number): void {
-    const color = LoggerColorType[type].toLowerCase();
-
-    console.log(chalk[color].bold(msg));
+  show(msg, type) {
+    console.log(chalk[type].bold(msg));
   }
 
   /**
    * 默认
    * @param {string} msg 消息
    */
-  public default(msg: string): void {
-    const colorType = LoggerColorType.WHITE;
+  default(msg) {
+    const color = LoggerColorType.WHITE;
 
-    this.show(msg, colorType);
+    this.show(`${msg}`, color);
   }
 
   /**
    * 信息
    * @param {string} msg 消息
    */
-  public info(msg: string): void {
+  info(msg) {
     const colorType = LoggerColorType.GREEN;
 
-    this.show(msg, colorType);
+    this.show(`${msg}`, colorType);
   }
 
   /**
    * 警告
    * @param {string} msg 消息
    */
-  public warn(msg: string): void {
+  warn(msg) {
     const colorType = LoggerColorType.YELLOW;
 
     this.show(`${msg}`, colorType);
@@ -92,7 +74,7 @@ class Logger {
    * 错误
    * @param {string} msg 消息
    */
-  public error(msg: string): void {
+  error(msg) {
     const colorType = LoggerColorType.RED;
 
     this.show(`${msg}`, colorType);
@@ -100,6 +82,6 @@ class Logger {
 }
 
 // 定义全局变量
-const logger: ILogger = Logger.getInstance();
+const logger = Logger.getInstance();
 
 export default logger;

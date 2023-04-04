@@ -1,7 +1,6 @@
 import * as url from 'url';
 
-import {resolveAppPath} from '../helpers/utils.js';
-import {IDevConfig, IBasicConfig} from '../helpers/store.js';
+import {resolvePath} from '../helpers/utils.js';
 
 const __filename = url.fileURLToPath(import.meta.url);
 
@@ -50,16 +49,16 @@ export default function common(devConfig, basicConfig) {
       pathinfo: false, //在打包数千个模块的项目中，这会导致造成垃圾回收性能压力
       clean: true,
     },
-    cache: {
-      version: `${basicConfig.name}-${devConfig.mode}`,
-      type: 'filesystem',
-      cacheDirectory: basicConfig.cache,
-      // 缓存依赖，当缓存依赖修改时，缓存失效
-      buildDependencies: {
-        // 将你的配置添加依赖，更改配置时，使得缓存失效
-        config: [__filename],
-      },
-    },
+    // cache: {
+    //   version: `${basicConfig.name}-${devConfig.mode}`,
+    //   type: 'filesystem',
+    //   cacheDirectory: basicConfig.cache,
+    //   // 缓存依赖，当缓存依赖修改时，缓存失效
+    //   buildDependencies: {
+    //     // 将你的配置添加依赖，更改配置时，使得缓存失效
+    //     config: [__filename],
+    //   },
+    // },
     experiments: {
       topLevelAwait: true,
       backCompat: true,
@@ -83,9 +82,9 @@ export default function common(devConfig, basicConfig) {
         '.svga',
       ],
       alias: {
-        '@widget': resolveAppPath('../widget/src'),
-        '@libs': resolveAppPath('../libs/src'),
-        '@style': resolveAppPath('../style/src'),
+        '@libs': resolvePath('./app/libs'),
+        '@ui': resolvePath('./app/ui'),
+        '@widget': resolvePath('./app/widget'),
       },
     },
   };

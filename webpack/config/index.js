@@ -11,31 +11,31 @@ import getFilesConfig from './files.js';
 // 脚本
 import getScrpitsConfig from './scrpits.js';
 // 插件
-import getPluginConfig from './plugin.js';
+import getPluginConfig from './plugins.js';
 // 开发
 import getDevelopmentConfig from './development.js';
 // 生成
 import getProductionConfig from './production.js';
 
 // webpack 配置
-export default async (): Promise<any> => {
+export default async () => {
   const basicConfig = store.getBasicConfig();
   const devConfig = store.getDevConfig();
 
   const commonConfig = getCommonConfig(devConfig, basicConfig);
   const stylesConfig = getStylesConfig(devConfig.isDev);
-  const fileConfig = getFilesConfig(devConfig.isDev, devConfig.browserslist);
+  const filesConfig = getFilesConfig(devConfig.isDev, devConfig.browserslist);
   const scrpitsConfig = getScrpitsConfig(devConfig.isDev, devConfig.browserslist);
-  const pluginConfig = await getPluginConfig(devConfig, basicConfig);
+  const pluginsConfig = getPluginConfig(devConfig, basicConfig);
   const developmentConfig = getDevelopmentConfig(basicConfig.port, basicConfig.dist);
   const productionConfig = getProductionConfig();
 
   const config = merge(
     commonConfig,
     stylesConfig,
-    fileConfig,
+    filesConfig,
     scrpitsConfig,
-    pluginConfig,
+    pluginsConfig,
     devConfig.isDev ? developmentConfig : productionConfig,
   );
 

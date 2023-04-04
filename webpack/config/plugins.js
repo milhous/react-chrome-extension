@@ -8,29 +8,19 @@ import CopyPlugin from 'copy-webpack-plugin';
 import ImageMinimizerPlugin from 'image-minimizer-webpack-plugin';
 import {createRequire} from 'module';
 
-import {resolveAppPath} from '../helpers/utils.js';
-import {IDevConfig, IBasicConfig} from '../helpers/store.js';
+import {resolvePath} from '../helpers/utils.js';
 
 const require = createRequire(import.meta.url);
-
-function getHtmlPlugins(chunks) {
-  return chunks.map(
-    chunk =>
-      new HtmlWebpackPlugin({
-        title: 'React extension',
-        filename: `${chunk}.html`,
-        chunks: [chunk],
-      }),
-  );
-}
 
 /**
  * 插件
  * @param {IDevConfig} devConfig 开发配置
  * @param {IBasicConfig} basicConfig 基础配置
  */
-export default async function plugin(devConfig, basicConfig) {
-  const configFile = basicConfig.tsconfig;
+export default function plugins(devConfig, basicConfig) {
+  const configFile = resolvePath('./tsconfig.json');
+
+  console.log('basicConfig.public', basicConfig.public);
 
   const plugins = [
     new WebpackBar({
@@ -82,7 +72,13 @@ export default async function plugin(devConfig, basicConfig) {
         },
       ],
     }),
-    ...getHtmlPlugins(['index']),
+    new HtmlWebpackPlugin({
+      title: basicConfig.name,
+      template: basicConfig.public + '/index.html',
+      inject: true,
+      minify: false,
+      chunks: ['index'],
+    }),
   ];
 
   if (devConfig.isDev) {
