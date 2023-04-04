@@ -20,8 +20,6 @@ const require = createRequire(import.meta.url);
 export default function plugins(devConfig, basicConfig) {
   const configFile = resolvePath('./tsconfig.json');
 
-  console.log('basicConfig.public', basicConfig.public);
-
   const plugins = [
     new WebpackBar({
       color: 'green',
@@ -72,10 +70,18 @@ export default function plugins(devConfig, basicConfig) {
         },
       ],
     }),
-    new HtmlWebpackPlugin({
-      title: basicConfig.name,
-      template: basicConfig.public + '/index.html',
-    }),
+    ...basicConfig.pages.map(
+      page =>
+        new HtmlWebpackPlugin({
+          // 不自动注入 chunks
+          inject: false,
+          template: basicConfig.public + '/index.html',
+          // 生成的 html 文件名
+          filename: `${page}.html`,
+          // 引用入口文件定义的 chunks
+          chunks: [page],
+        }),
+    ),
   ];
 
   if (devConfig.isDev) {

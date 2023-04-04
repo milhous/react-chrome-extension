@@ -1,10 +1,20 @@
 {
     "version": "1.0.0",
     "manifest_version": 3,
-    "name": "React Chrome Extension",
+    "name": "Milhous",
     "description": "This is a Chrome extension built with React and TypeScript",
     "action": {
-        "default_popup": "index.html",
-        "default_title": "React Chrome Extension"
-    }
+        "default_popup": "popup.html",
+        "default_title": "Milhous Chrome Extension"
+    },
+    "permissions": [
+        "activeTab",
+        "alarms",
+        "clipboardWrite",
+        "notifications",
+        "scripting",
+        "storage",
+        "unlimitedStorage",
+        "webRequest"
+    ]
 }

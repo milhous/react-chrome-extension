@@ -47,6 +47,7 @@ module.exports = {
     "prettier/prettier": [
       "error",
       {
+        plugins: ["prettier-plugin-tailwindcss"],
         printWidth: 120,
         semi: true,
         singleQuote: true,

@@ -23,6 +23,8 @@ class Store {
 
   // 应用名称
   _appName = 'Milhous';
+  // 页面
+  _appPages = ['index'];
   // 应用端口号
   _appPort = 3001;
   // 应用源码地址 绝对路径
@@ -53,6 +55,7 @@ class Store {
   getBasicConfig() {
     return {
       name: this._appName,
+      pages: this._appPages,
       port: this._appPort,
       src: this._appSrc,
       dist: this._appDist,
@@ -75,8 +78,8 @@ class Store {
   }
 
   // 初始化
-  init(env, mode, analyze) {
-    this._setAppPath();
+  init(env, mode, pages, analyze) {
+    this._setAppConfig(pages);
 
     this._setDevConfig(env, mode, analyze);
   }
@@ -100,8 +103,12 @@ class Store {
     }
   }
 
-  // 设置App路径
-  _setAppPath() {
+  // 设置App配置
+  _setAppConfig(pages = []) {
+    if (Array.isArray(pages) && pages.length) {
+      this._appPages = pages;
+    }
+
     this._appSrc = resolvePath('./app');
     this._appDist = resolvePath('./dist');
     this._appCache = resolvePath('./.cache/webpack');

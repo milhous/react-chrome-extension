@@ -22,11 +22,11 @@ export default function common(devConfig, basicConfig) {
     assetModuleFilename = 'static/assets/[name].[ext][query]';
   }
 
+  const entry = basicConfig.pages.reduce((e, p) => ({...e, [p]: `${basicConfig.src}/${p}`}), {});
+
   return {
     // 解决 HMR for federated modules ChunkLoadError: Loading hot update chunk
-    entry: {
-      index: basicConfig.src + '/index',
-    },
+    entry,
     devtool,
     mode: devConfig.mode,
     target: 'web',

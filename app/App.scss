@@ -1,12 +1,7 @@
-.App {
-  color: white;
-  text-align: center;
-  color: #333;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  @apply bg-sky-500 max-w-3xl;
-}
-
-.container {
-  width: 15rem;
-  height: 15rem;
+.app {
+  @apply w-full h-full text-[15px] leading-[24px];
 }
