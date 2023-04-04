@@ -3,9 +3,33 @@
     "manifest_version": 3,
     "name": "Milhous",
     "description": "This is a Chrome extension built with React and TypeScript",
+    "icons": {
+        "16": "icons/16.png",
+        "19": "icons/19.png",
+        "32": "icons/32.png",
+        "38": "icons/38.png",
+        "64": "icons/64.png",
+        "128": "icons/128.png",
+        "512": "icons/512.png"
+    },
+    "host_permissions": [
+        "http://localhost:3001/",
+        "file://*/*",
+        "http://*/*",
+        "https://*/*"
+    ],
     "action": {
         "default_popup": "popup.html",
-        "default_title": "Milhous Chrome Extension"
+        "default_title": "Milhous Chrome Extension",
+        "default_icon": {
+            "16": "icons/16.png",
+            "19": "icons/19.png",
+            "32": "icons/32.png",
+            "38": "icons/38.png",
+            "64": "icons/64.png",
+            "128": "icons/128.png",
+            "512": "icons/512.png"
+        }
     },
     "permissions": [
         "activeTab",

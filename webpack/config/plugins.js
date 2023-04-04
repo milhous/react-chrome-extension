@@ -34,6 +34,14 @@ export default function plugins(devConfig, basicConfig) {
           },
           noErrorOnMissing: true,
         },
+        {
+          from: 'webpack/icons',
+          to: './icons',
+          globOptions: {
+            ignore: ['**/.DS_Store'],
+          },
+          noErrorOnMissing: true,
+        },
       ],
     }),
     new ForkTsCheckerWebpackPlugin({
@@ -76,6 +84,7 @@ export default function plugins(devConfig, basicConfig) {
           // 不自动注入 chunks
           inject: false,
           template: basicConfig.public + '/index.html',
+          favicon: basicConfig.public + '/favicon.ico',
           // 生成的 html 文件名
           filename: `${page}.html`,
           // 引用入口文件定义的 chunks
