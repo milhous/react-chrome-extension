@@ -1,4 +1,4 @@
-### Packages
+## Packages
 
 #### zxcvbn
 
@@ -8,9 +8,9 @@
 
 一个用于管理以太坊账户组的模块，称为“Keyrings”，最初是为 MetaMask 的多账户类型功能定义的。
 
-### Knowledge
+## Knowledge
 
-#### BIP39 协议
+#### BIP39、BIP44、BIP32 协议
 
 - BIP39：助记词生成协议
 
@@ -26,7 +26,7 @@
 
 [BIP39、BIP44、BIP32 协议](https://fpchen.readthedocs.io/zh/latest/note/BlockChain/wallet/BIP39-BIP32-BIP44.html#)
 
-#### Flow
+## Flow
 
 ui/pages/onboarding-flow/onboarding-flow.js
 
