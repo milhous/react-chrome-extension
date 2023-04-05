@@ -10,7 +10,7 @@ export default function development(port, dist) {
       // 解决 HMR for federated modules ChunkLoadError: Loading hot update chunk
       liveReload: false,
       hot: true,
-      host: '0.0.0.0',
+      host: 'localhost',
       port,
       compress: true,
       historyApiFallback: true,

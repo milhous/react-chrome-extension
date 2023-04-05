@@ -4,4 +4,32 @@
 
 .app {
   @apply w-full h-full text-[15px] leading-[24px];
+
+  &-btn_primary {
+    @apply h-[46px] w-[200px] rounded-[23px] bg-primary-blue text-center text-[20px] font-semibold leading-[46px] text-white;
+  }
+
+  &-form {
+    &_input {
+      @apply relative w-full flex items-center border-b border-gray border-solid before:absolute before:left-1/2 before:-translate-x-1/2 before:-bottom-[1px] before:h-[2px] before:w-0 before:transition-all before:bg-primary-blue;
+
+      input {
+        @apply w-full h-[35px];
+
+        outline: none;
+      }
+
+      svg {
+        @apply ml-2.5 w-[24px] h-[24px] min-w-[24px] text-gray cursor-pointer;
+      }
+    }
+
+    &_focus {
+      @apply before:w-full;
+    }
+
+    &_info {
+      @apply text-[12px] leading-5 h-6 text-gray text-left;
+    }
+  }
 }

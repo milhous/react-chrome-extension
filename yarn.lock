@@ -1967,90 +1967,92 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-arm64@npm:1.3.44":
-  version: 1.3.44
-  resolution: "@swc/core-darwin-arm64@npm:1.3.44::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-darwin-arm64%2F-%2Fcore-darwin-arm64-1.3.44.tgz"
+"@swc/core-darwin-arm64@npm:1.3.46":
+  version: 1.3.46
+  resolution: "@swc/core-darwin-arm64@npm:1.3.46::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-darwin-arm64%2F-%2Fcore-darwin-arm64-1.3.46.tgz"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-x64@npm:1.3.44":
-  version: 1.3.44
-  resolution: "@swc/core-darwin-x64@npm:1.3.44::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-darwin-x64%2F-%2Fcore-darwin-x64-1.3.44.tgz"
+"@swc/core-darwin-x64@npm:1.3.46":
+  version: 1.3.46
+  resolution: "@swc/core-darwin-x64@npm:1.3.46::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-darwin-x64%2F-%2Fcore-darwin-x64-1.3.46.tgz"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm-gnueabihf@npm:1.3.44":
-  version: 1.3.44
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.3.44::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-linux-arm-gnueabihf%2F-%2Fcore-linux-arm-gnueabihf-1.3.44.tgz"
+"@swc/core-linux-arm-gnueabihf@npm:1.3.46":
+  version: 1.3.46
+  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.3.46::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-linux-arm-gnueabihf%2F-%2Fcore-linux-arm-gnueabihf-1.3.46.tgz"
   conditions: os=linux & cpu=arm
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-gnu@npm:1.3.44":
-  version: 1.3.44
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.3.44::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-linux-arm64-gnu%2F-%2Fcore-linux-arm64-gnu-1.3.44.tgz"
+"@swc/core-linux-arm64-gnu@npm:1.3.46":
+  version: 1.3.46
+  resolution: "@swc/core-linux-arm64-gnu@npm:1.3.46::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-linux-arm64-gnu%2F-%2Fcore-linux-arm64-gnu-1.3.46.tgz"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-musl@npm:1.3.44":
-  version: 1.3.44
-  resolution: "@swc/core-linux-arm64-musl@npm:1.3.44::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-linux-arm64-musl%2F-%2Fcore-linux-arm64-musl-1.3.44.tgz"
+"@swc/core-linux-arm64-musl@npm:1.3.46":
+  version: 1.3.46
+  resolution: "@swc/core-linux-arm64-musl@npm:1.3.46::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-linux-arm64-musl%2F-%2Fcore-linux-arm64-musl-1.3.46.tgz"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-gnu@npm:1.3.44":
-  version: 1.3.44
-  resolution: "@swc/core-linux-x64-gnu@npm:1.3.44::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-linux-x64-gnu%2F-%2Fcore-linux-x64-gnu-1.3.44.tgz"
+"@swc/core-linux-x64-gnu@npm:1.3.46":
+  version: 1.3.46
+  resolution: "@swc/core-linux-x64-gnu@npm:1.3.46::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-linux-x64-gnu%2F-%2Fcore-linux-x64-gnu-1.3.46.tgz"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.3.44":
-  version: 1.3.44
-  resolution: "@swc/core-linux-x64-musl@npm:1.3.44::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-linux-x64-musl%2F-%2Fcore-linux-x64-musl-1.3.44.tgz"
+"@swc/core-linux-x64-musl@npm:1.3.46":
+  version: 1.3.46
+  resolution: "@swc/core-linux-x64-musl@npm:1.3.46::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-linux-x64-musl%2F-%2Fcore-linux-x64-musl-1.3.46.tgz"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@swc/core-win32-arm64-msvc@npm:1.3.44":
-  version: 1.3.44
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.3.44::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-win32-arm64-msvc%2F-%2Fcore-win32-arm64-msvc-1.3.44.tgz"
+"@swc/core-win32-arm64-msvc@npm:1.3.46":
+  version: 1.3.46
+  resolution: "@swc/core-win32-arm64-msvc@npm:1.3.46::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-win32-arm64-msvc%2F-%2Fcore-win32-arm64-msvc-1.3.46.tgz"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@swc/core-win32-ia32-msvc@npm:1.3.44":
-  version: 1.3.44
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.3.44::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-win32-ia32-msvc%2F-%2Fcore-win32-ia32-msvc-1.3.44.tgz"
+"@swc/core-win32-ia32-msvc@npm:1.3.46":
+  version: 1.3.46
+  resolution: "@swc/core-win32-ia32-msvc@npm:1.3.46::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-win32-ia32-msvc%2F-%2Fcore-win32-ia32-msvc-1.3.46.tgz"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@swc/core-win32-x64-msvc@npm:1.3.44":
-  version: 1.3.44
-  resolution: "@swc/core-win32-x64-msvc@npm:1.3.44::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-win32-x64-msvc%2F-%2Fcore-win32-x64-msvc-1.3.44.tgz"
+"@swc/core-win32-x64-msvc@npm:1.3.46":
+  version: 1.3.46
+  resolution: "@swc/core-win32-x64-msvc@npm:1.3.46::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore-win32-x64-msvc%2F-%2Fcore-win32-x64-msvc-1.3.46.tgz"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
-"@swc/core@npm:^1.3.44":
-  version: 1.3.44
-  resolution: "@swc/core@npm:1.3.44::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore%2F-%2Fcore-1.3.44.tgz"
+"@swc/core@npm:^1.3.46":
+  version: 1.3.46
+  resolution: "@swc/core@npm:1.3.46::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40swc%2Fcore%2F-%2Fcore-1.3.46.tgz"
   dependencies:
-    "@swc/core-darwin-arm64": 1.3.44
-    "@swc/core-darwin-x64": 1.3.44
-    "@swc/core-linux-arm-gnueabihf": 1.3.44
-    "@swc/core-linux-arm64-gnu": 1.3.44
-    "@swc/core-linux-arm64-musl": 1.3.44
-    "@swc/core-linux-x64-gnu": 1.3.44
-    "@swc/core-linux-x64-musl": 1.3.44
-    "@swc/core-win32-arm64-msvc": 1.3.44
-    "@swc/core-win32-ia32-msvc": 1.3.44
-    "@swc/core-win32-x64-msvc": 1.3.44
+    "@swc/core-darwin-arm64": 1.3.46
+    "@swc/core-darwin-x64": 1.3.46
+    "@swc/core-linux-arm-gnueabihf": 1.3.46
+    "@swc/core-linux-arm64-gnu": 1.3.46
+    "@swc/core-linux-arm64-musl": 1.3.46
+    "@swc/core-linux-x64-gnu": 1.3.46
+    "@swc/core-linux-x64-musl": 1.3.46
+    "@swc/core-win32-arm64-msvc": 1.3.46
+    "@swc/core-win32-ia32-msvc": 1.3.46
+    "@swc/core-win32-x64-msvc": 1.3.46
+  peerDependencies:
+    "@swc/helpers": ^0.5.0
   dependenciesMeta:
     "@swc/core-darwin-arm64":
       optional: true
@@ -2072,7 +2074,7 @@ __metadata:
       optional: true
     "@swc/core-win32-x64-msvc":
       optional: true
-  checksum: aa3377769e1d8f02ee01e685f255796e47b8cbc64d7de4ee8a05a8bd8e2286856c1f32958f8bbb45b74bcf0bfaa4dc7b708cd9252cb97769575c29016d698649
+  checksum: bd1773bf9e7940b540d4f7a36bf109594562fcca338ec60d5a95bd1bc9fc2e3e632351c3c9cf803f6947bf7ebc200e5260d034c49db8d28689d96d031e2836b1
   languageName: node
   linkType: hard
 
@@ -2465,6 +2467,13 @@ __metadata:
   dependencies:
     "@types/yargs-parser": "*"
   checksum: 5f3ac4dc4f6e211c1627340160fbe2fd247ceba002190da6cf9155af1798450501d628c9165a183f30a224fc68fa5e700490d740ff4c73e2cdef95bc4e8ba7bf
+  languageName: node
+  linkType: hard
+
+"@types/zxcvbn@npm:^4":
+  version: 4.4.1
+  resolution: "@types/zxcvbn@npm:4.4.1::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fzxcvbn%2F-%2Fzxcvbn-4.4.1.tgz"
+  checksum: 71c484f1aa049921997ee6471604725a7fb00b9899e7753c6e94275a2b135e1088ed3f2f2ba77d189715d1ec61bed65b06899ba03e061b07ffc32c2a9296501b
   languageName: node
   linkType: hard
 
@@ -3798,6 +3807,13 @@ __metadata:
   version: 3.8.0
   resolution: "ci-info@npm:3.8.0::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fci-info%2F-%2Fci-info-3.8.0.tgz"
   checksum: d0a4d3160497cae54294974a7246202244fff031b0a6ea20dd57b10ec510aa17399c41a1b0982142c105f3255aff2173e5c0dd7302ee1b2f28ba3debda375098
+  languageName: node
+  linkType: hard
+
+"classnames@npm:^2.3.2":
+  version: 2.3.2
+  resolution: "classnames@npm:2.3.2::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fclassnames%2F-%2Fclassnames-2.3.2.tgz"
+  checksum: 2c62199789618d95545c872787137262e741f9db13328e216b093eea91c85ef2bfb152c1f9e63027204e2559a006a92eb74147d46c800a9f96297ae1d9f96f4e
   languageName: node
   linkType: hard
 
@@ -8551,9 +8567,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"npm-check-updates@npm:^16.10.1":
-  version: 16.10.1
-  resolution: "npm-check-updates@npm:16.10.1::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fnpm-check-updates%2F-%2Fnpm-check-updates-16.10.1.tgz"
+"npm-check-updates@npm:^16.10.2":
+  version: 16.10.2
+  resolution: "npm-check-updates@npm:16.10.2::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fnpm-check-updates%2F-%2Fnpm-check-updates-16.10.2.tgz"
   dependencies:
     chalk: ^5.2.0
     cli-table3: ^0.6.3
@@ -8588,7 +8604,7 @@ __metadata:
   bin:
     ncu: build/src/bin/cli.js
     npm-check-updates: build/src/bin/cli.js
-  checksum: c244e7bdfa3f8ea9f158971ca6bc7a8cd1e8093caa44b7e2722294b22f364012f901b5ee313fb780c927df427e671ebee66c55ae7b4ac880f7072ce761aa4f53
+  checksum: 67abc316e9a9d8d332416fac964dbd026a6a9ca48e1a2d07dd8aaa81e5b0cbcd2aad2bb38bad9c79a1ec38028098c40ed3a4c386f7fbd77bcce29bc683bc702b
   languageName: node
   linkType: hard
 
@@ -9455,9 +9471,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-loader@npm:^7.2.3":
-  version: 7.2.3
-  resolution: "postcss-loader@npm:7.2.3::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fpostcss-loader%2F-%2Fpostcss-loader-7.2.3.tgz"
+"postcss-loader@npm:^7.2.4":
+  version: 7.2.4
+  resolution: "postcss-loader@npm:7.2.4::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fpostcss-loader%2F-%2Fpostcss-loader-7.2.4.tgz"
   dependencies:
     cosmiconfig: ^8.1.3
     cosmiconfig-typescript-loader: ^4.3.0
@@ -9473,7 +9489,7 @@ __metadata:
       optional: true
     typescript:
       optional: true
-  checksum: 75bda217cd9f5006c179899ea4d105ebd6416d586f06683203029c08e0affe3b18c1ba7720bee7b0c7f35123fcd908cdb3a7f7b8511295acc849f067a12dc4da
+  checksum: d75de64f6629a2d76b1c1e9ad5022cae9b589472d8d091e21105d93a0f09a4c80f08fe10323d41ddf2fbda157910a03df3c538ce8fccf974b179d0762b408fa3
   languageName: node
   linkType: hard
 
@@ -9820,9 +9836,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-tailwindcss@npm:^0.2.6":
-  version: 0.2.6
-  resolution: "prettier-plugin-tailwindcss@npm:0.2.6::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fprettier-plugin-tailwindcss%2F-%2Fprettier-plugin-tailwindcss-0.2.6.tgz"
+"prettier-plugin-tailwindcss@npm:^0.2.7":
+  version: 0.2.7
+  resolution: "prettier-plugin-tailwindcss@npm:0.2.7::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fprettier-plugin-tailwindcss%2F-%2Fprettier-plugin-tailwindcss-0.2.7.tgz"
   peerDependencies:
     "@ianvs/prettier-plugin-sort-imports": "*"
     "@prettier/plugin-php": "*"
@@ -9871,7 +9887,7 @@ __metadata:
       optional: true
     prettier-plugin-twig-melody:
       optional: true
-  checksum: 5cda3cee9657ca67708f348829b168932c89f099fb1bec821afcb9f6e2c3bfdac9bae31cd2a38ecbe5548182093dd4072a8ba9857a25675e8616b35e1eb14ed2
+  checksum: dca201a7454e6eb32b8e5ec0b585add295c4a88fcd92d94d7dd8bdf2040c7210b12efb04764c457781467e7ecec7f32105e9dceb881736a6859c3b2a7a3ad461
   languageName: node
   linkType: hard
 
@@ -10104,17 +10120,19 @@ __metadata:
   dependencies:
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
     "@svgr/webpack": ^7.0.0
-    "@swc/core": ^1.3.44
+    "@swc/core": ^1.3.46
     "@types/lodash": ^4
     "@types/node": ^18.15.11
     "@types/prettier": ^2
     "@types/react": ^18.0.33
     "@types/react-dom": ^18.0.11
+    "@types/zxcvbn": ^4
     "@typescript-eslint/eslint-plugin": ^5.57.1
     "@typescript-eslint/parser": ^5.57.1
     autoprefixer: ^10.4.14
     browserslist: ^4.21.5
     chalk: ^5.2.0
+    classnames: ^2.3.2
     clean-webpack-plugin: ^4.0.0
     copy-webpack-plugin: ^11.0.0
     css-loader: ^6.7.3
@@ -10137,13 +10155,14 @@ __metadata:
     lodash: ^4.17.21
     mini-css-extract-plugin: ^2.7.5
     mini-svg-data-uri: ^1.4.4
-    npm-check-updates: ^16.10.1
+    npm-check-updates: ^16.10.2
     postcss: ^8.4.21
-    postcss-loader: ^7.2.3
+    postcss-loader: ^7.2.4
     prettier: ^2.8.7
-    prettier-plugin-tailwindcss: ^0.2.6
+    prettier-plugin-tailwindcss: ^0.2.7
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-hook-form: ^7.43.9
     react-refresh: ^0.14.0
     react-router-dom: ^6.10.0
     sass: ^1.60.0
@@ -10160,6 +10179,7 @@ __metadata:
     webpack-dev-server: ^4.13.2
     webpack-merge: ^5.8.0
     webpackbar: ^5.0.2
+    zxcvbn: ^4.4.2
   languageName: unknown
   linkType: soft
 
@@ -10172,6 +10192,15 @@ __metadata:
   peerDependencies:
     react: ^18.2.0
   checksum: 7d323310bea3a91be2965f9468d552f201b1c27891e45ddc2d6b8f717680c95a75ae0bc1e3f5cf41472446a2589a75aed4483aee8169287909fcd59ad149e8cc
+  languageName: node
+  linkType: hard
+
+"react-hook-form@npm:^7.43.9":
+  version: 7.43.9
+  resolution: "react-hook-form@npm:7.43.9::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Freact-hook-form%2F-%2Freact-hook-form-7.43.9.tgz"
+  peerDependencies:
+    react: ^16.8.0 || ^17 || ^18
+  checksum: 65b94de625f2b7921c4e856bf0abbe142bfe06c052217bd1bcc3a842e2cc37fa3a3e03758119dc038bbcf5edb49e02c29206528b80b201f9a4d601471ef78153
   languageName: node
   linkType: hard
 
@@ -12562,5 +12591,12 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fyocto-queue%2F-%2Fyocto-queue-0.1.0.tgz"
   checksum: f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
+  languageName: node
+  linkType: hard
+
+"zxcvbn@npm:^4.4.2":
+  version: 4.4.2
+  resolution: "zxcvbn@npm:4.4.2::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fzxcvbn%2F-%2Fzxcvbn-4.4.2.tgz"
+  checksum: 76ab32c066082ac73491b7cd7f93ad0595c59b6d45ae80a0745e9e1661237388beb2f0c2ba0ae3dc330ca3ecdb87edcb7a21e0c09137ab81d5b32e584cda1e5d
   languageName: node
   linkType: hard

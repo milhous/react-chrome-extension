@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <BrowserRouter>
-    <main className="relative h-full min-h-[600px] w-full min-w-[384px] ">
+    <main className="relative h-full min-h-[600px] w-full min-w-[375px]">
       <App page="popup" />
       <WidgetMaximize />
     </main>
