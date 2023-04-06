@@ -86,7 +86,7 @@ export default function plugins(devConfig, basicConfig) {
           template: basicConfig.public + '/index.html',
           favicon: basicConfig.public + '/favicon.ico',
           // 生成的 html 文件名
-          filename: `${page}.html`,
+          filename: `${page}/index.html`,
           // 引用入口文件定义的 chunks
           chunks: [page],
         }),

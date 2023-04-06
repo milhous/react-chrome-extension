@@ -8216,7 +8216,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^7.4.2, minimatch@npm:^7.4.3":
+"minimatch@npm:^7.4.2":
   version: 7.4.4
   resolution: "minimatch@npm:7.4.4::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fminimatch%2F-%2Fminimatch-7.4.4.tgz"
   dependencies:
@@ -8231,6 +8231,15 @@ __metadata:
   dependencies:
     brace-expansion: ^2.0.1
   checksum: ceb50867205c716a1d027e6de3bd5976a940cec266acf05ff41c29bff9967290a867b381f6317fcebddfb056f0eedff88484d121e4449c3bb16c552a51b7a745
+  languageName: node
+  linkType: hard
+
+"minimatch@npm:^8.0.3":
+  version: 8.0.3
+  resolution: "minimatch@npm:8.0.3::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fminimatch%2F-%2Fminimatch-8.0.3.tgz"
+  dependencies:
+    brace-expansion: ^2.0.1
+  checksum: 8957d8105be6729bf1d3af9c410b2a38ffcf3cd17d4ffaf715b2aa4841490aaa82f1ebff785e71b5b97747199ccc61027db597495941cf46243d9a64382e1560
   languageName: node
   linkType: hard
 
@@ -8567,9 +8576,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"npm-check-updates@npm:^16.10.2":
-  version: 16.10.2
-  resolution: "npm-check-updates@npm:16.10.2::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fnpm-check-updates%2F-%2Fnpm-check-updates-16.10.2.tgz"
+"npm-check-updates@npm:^16.10.7":
+  version: 16.10.7
+  resolution: "npm-check-updates@npm:16.10.7::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fnpm-check-updates%2F-%2Fnpm-check-updates-16.10.7.tgz"
   dependencies:
     chalk: ^5.2.0
     cli-table3: ^0.6.3
@@ -8581,15 +8590,16 @@ __metadata:
     globby: ^11.0.4
     hosted-git-info: ^5.1.0
     ini: ^4.0.0
+    js-yaml: ^4.1.0
     json-parse-helpfulerror: ^1.0.3
     jsonlines: ^0.1.1
     lodash: ^4.17.21
-    minimatch: ^7.4.3
+    minimatch: ^8.0.3
     p-map: ^4.0.0
     pacote: 15.1.1
     parse-github-url: ^1.0.2
     progress: ^2.0.3
-    prompts-ncu: ^2.5.1
+    prompts-ncu: ^3.0.0
     rc-config-loader: ^4.1.2
     remote-git-tags: ^3.0.0
     rimraf: ^4.4.1
@@ -8600,11 +8610,10 @@ __metadata:
     strip-json-comments: ^5.0.0
     untildify: ^4.0.0
     update-notifier: ^6.0.2
-    yaml: ^2.2.1
   bin:
     ncu: build/src/bin/cli.js
     npm-check-updates: build/src/bin/cli.js
-  checksum: 67abc316e9a9d8d332416fac964dbd026a6a9ca48e1a2d07dd8aaa81e5b0cbcd2aad2bb38bad9c79a1ec38028098c40ed3a4c386f7fbd77bcce29bc683bc702b
+  checksum: 17d3219031595e3f55172c3a19e6b51f46c8888166bce111eb8288e20c8042f75cee7fb2f7e5a04c96c772f926fd3aa5afaa87ebaa98c943c6048ac66baf520b
   languageName: node
   linkType: hard
 
@@ -9955,13 +9964,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prompts-ncu@npm:^2.5.1":
-  version: 2.5.1
-  resolution: "prompts-ncu@npm:2.5.1::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fprompts-ncu%2F-%2Fprompts-ncu-2.5.1.tgz"
+"prompts-ncu@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "prompts-ncu@npm:3.0.0::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fprompts-ncu%2F-%2Fprompts-ncu-3.0.0.tgz"
   dependencies:
     kleur: ^4.0.1
     sisteransi: ^1.0.5
-  checksum: e8b64793053382c46dbdfe482e4523e83cb3770faa453abc37652752a12e612c87f43bb2b8bb1f4962db644bc448c350777d506d61bd18e5a3e3a2aa3d0c3695
+  checksum: 1040cf0d96e658873412e2af54aeba3dee58448c943e45d20996d16b03b25a0f20a1eeefc9a40bf914b33f4a8588bf9f66c5e09b90de881c588f53870cd81f7c
   languageName: node
   linkType: hard
 
@@ -10155,7 +10164,7 @@ __metadata:
     lodash: ^4.17.21
     mini-css-extract-plugin: ^2.7.5
     mini-svg-data-uri: ^1.4.4
-    npm-check-updates: ^16.10.2
+    npm-check-updates: ^16.10.7
     postcss: ^8.4.21
     postcss-loader: ^7.2.4
     prettier: ^2.8.7
@@ -10174,7 +10183,7 @@ __metadata:
     terser-webpack-plugin: ^5.3.7
     typescript: ^5.0.3
     webextension-polyfill: ^0.10.0
-    webpack: ^5.77.0
+    webpack: ^5.78.0
     webpack-cli: ^5.0.1
     webpack-dev-server: ^4.13.2
     webpack-merge: ^5.8.0
@@ -12310,9 +12319,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack@npm:^5.77.0":
-  version: 5.77.0
-  resolution: "webpack@npm:5.77.0::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fwebpack%2F-%2Fwebpack-5.77.0.tgz"
+"webpack@npm:^5.78.0":
+  version: 5.78.0
+  resolution: "webpack@npm:5.78.0::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fwebpack%2F-%2Fwebpack-5.78.0.tgz"
   dependencies:
     "@types/eslint-scope": ^3.7.3
     "@types/estree": ^0.0.51
@@ -12343,7 +12352,7 @@ __metadata:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 21341bb72cbbf61dfb3af91eabe9290a6c05139f268eff3c419e5339deb6c79f2f36de55d9abf017d3ccbad290a535c02325001b2816acc393f3c022e67ac17c
+  checksum: 4213e5bcc23e54c2f2a589e8e96f1fb71a2c05d5033ffda6dd8bae32284abfa0eb6b6d0707806e8dcfa48a8fcda2448d3af6c4539061679251d94c0996bebf99
   languageName: node
   linkType: hard
 
@@ -12567,13 +12576,6 @@ __metadata:
   version: 1.10.2
   resolution: "yaml@npm:1.10.2::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fyaml%2F-%2Fyaml-1.10.2.tgz"
   checksum: ce4ada136e8a78a0b08dc10b4b900936912d15de59905b2bf415b4d33c63df1d555d23acb2a41b23cf9fb5da41c256441afca3d6509de7247daa062fd2c5ea5f
-  languageName: node
-  linkType: hard
-
-"yaml@npm:^2.2.1":
-  version: 2.2.1
-  resolution: "yaml@npm:2.2.1::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fyaml%2F-%2Fyaml-2.2.1.tgz"
-  checksum: 84f68cbe462d5da4e7ded4a8bded949ffa912bc264472e5a684c3d45b22d8f73a3019963a32164023bdf3d83cfb6f5b58ff7b2b10ef5b717c630f40bd6369a23
   languageName: node
   linkType: hard
 

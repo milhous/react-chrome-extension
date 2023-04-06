@@ -19,7 +19,7 @@
         "https://*/*"
     ],
     "action": {
-        "default_popup": "popup.html",
+        "default_popup": "popup/index.html",
         "default_title": "Milhous Chrome Extension",
         "default_icon": {
             "16": "icons/16.png",

@@ -21,6 +21,7 @@
     "paths": {
       "@assets/*": ["app/assets/*"],
       "@libs/*": ["app/libs/*"],
+      "@pages/*": ["app/pages/*"],
       "@ui/*": ["app/ui/*"],
       "@widget/*": ["app/widget/*"]
     },

@@ -1,10 +1,12 @@
 'use client';
 
-import {useEffect, useState} from 'react';
+import {useDeferredValue, useEffect, useMemo, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {useForm, SubmitHandler} from 'react-hook-form';
 import zxcvbn from 'zxcvbn';
 import classnames from 'classnames';
 
+import ROUTES from '@libs/constants/routes';
 import {PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH} from '@libs/constants/form';
 import Assets from '@assets/index';
 
@@ -25,8 +27,8 @@ enum InputType {
   CONFIRM_PASSWORD,
 }
 
-// 判断密码是否有效
-const isValid = (password: string, confirmPassword: string) => {
+// 检测密码是否有效
+const checkValid = (password: string, confirmPassword: string) => {
   if (!password || !confirmPassword || password !== confirmPassword) {
     return false;
   }
@@ -37,7 +39,7 @@ const isValid = (password: string, confirmPassword: string) => {
 };
 
 // 获取密码强度文案
-const getPasswordStrengthLabel = (password: string) => {
+const getPasswordStrengthLabel = (password = '') => {
   const isTooShort = password.length > 0 && password.length < PASSWORD_MIN_LENGTH;
   const isCheck = password.length >= PASSWORD_MIN_LENGTH;
   let text = '';
@@ -61,9 +63,11 @@ const getPasswordStrengthLabel = (password: string) => {
 
 // 创建钱包
 export default function CreateWallet() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    watch,
     setError,
     formState: {errors},
   } = useForm<IFormInput>();
@@ -72,8 +76,20 @@ export default function CreateWallet() {
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState<boolean>(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const deferredPassword = useDeferredValue(watch('password'));
+  const deferredConfirmPassword = useDeferredValue(watch('confirmPassword'));
 
-  const onSubmit: SubmitHandler<IFormInput> = data => console.log(data);
+  const isValid = useMemo(() => {
+    return checkValid(deferredPassword, deferredConfirmPassword);
+  }, [deferredPassword, deferredConfirmPassword]);
+
+  const onSubmit: SubmitHandler<IFormInput> = async data => {
+    if (!isValid) {
+      return;
+    }
+
+    navigate(ROUTES.SECURE_WALLET);
+  };
 
   const handlePasswordVisible = (type: string) => {
     switch (type) {
@@ -88,12 +104,21 @@ export default function CreateWallet() {
     }
   };
 
-  const handlePasswordChange = evt => {
-    const passwordInput = evt.target.value;
-    const text = getPasswordStrengthLabel(passwordInput);
+  useEffect(() => {
+    const text = getPasswordStrengthLabel(deferredPassword);
 
     setPasswordStrength(text);
-  };
+  }, [deferredPassword]);
+
+  useEffect(() => {
+    let text = '';
+
+    if (!!deferredPassword && !!deferredConfirmPassword && deferredPassword !== deferredConfirmPassword) {
+      text = '密码不匹配';
+    }
+
+    setConfirmPasswordError(text);
+  }, [deferredPassword, deferredConfirmPassword]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -103,11 +128,11 @@ export default function CreateWallet() {
             <input
               type={passwordVisible ? 'text' : 'password'}
               placeholder={`新密码（至少 8 个字符）`}
+              autoComplete="new-password"
               onFocus={() => {
                 setInputTypeFocus(InputType.PASSWORD);
               }}
               {...register('password', {
-                onChange: handlePasswordChange,
                 onBlur: () => {
                   setInputTypeFocus(InputType.NONE);
                 },
@@ -132,6 +157,7 @@ export default function CreateWallet() {
             <input
               type={confirmPasswordVisible ? 'text' : 'password'}
               placeholder="确认密码"
+              autoComplete="new-password"
               onFocus={() => {
                 setInputTypeFocus(InputType.CONFIRM_PASSWORD);
               }}
@@ -148,7 +174,7 @@ export default function CreateWallet() {
               <Assets.IconEyeOff onClick={() => handlePasswordVisible('confirmPassword')} />
             )}
           </div>
-          <p className="app-form_info">{errors.confirmPassword && '密码不匹配'}</p>
+          <p className="app-form_info">{confirmPasswordError}</p>
         </div>
         <button className="app-btn_primary" type="submit">
           创建钱包

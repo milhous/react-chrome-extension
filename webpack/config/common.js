@@ -22,7 +22,7 @@ export default function common(devConfig, basicConfig) {
     assetModuleFilename = 'static/assets/[name].[ext][query]';
   }
 
-  const entry = basicConfig.pages.reduce((e, p) => ({...e, [p]: `${basicConfig.src}/${p}`}), {});
+  const entry = basicConfig.pages.reduce((e, p) => ({...e, [p]: `${basicConfig.src}/${p}/index`}), {});
 
   return {
     // 解决 HMR for federated modules ChunkLoadError: Loading hot update chunk
@@ -86,6 +86,7 @@ export default function common(devConfig, basicConfig) {
       alias: {
         '@assets': resolvePath('./app/assets'),
         '@libs': resolvePath('./app/libs'),
+        '@pages': resolvePath('./app/pages'),
         '@ui': resolvePath('./app/ui'),
         '@widget': resolvePath('./app/widget'),
       },

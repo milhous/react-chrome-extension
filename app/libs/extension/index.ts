@@ -27,7 +27,7 @@ class Extension {
 
   // 获取插件url
   getExtensionURL(route = null, queryString = null) {
-    let extensionURL = browser.runtime.getURL(`${PAGE_TYPE.HOME}.html`);
+    let extensionURL = browser.runtime.getURL(`${PAGE_TYPE.HOME}/index.html`);
 
     if (route) {
       extensionURL += `#${route}`;
