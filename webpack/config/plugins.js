@@ -1,3 +1,4 @@
+import webpack from 'webpack';
 import WebpackBar from 'webpackbar';
 import {CleanWebpackPlugin} from 'clean-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
@@ -23,6 +24,13 @@ export default function plugins(devConfig, basicConfig) {
   const plugins = [
     new WebpackBar({
       color: 'green',
+    }),
+    new webpack.DefinePlugin({
+      __isDEV__: devConfig.isDev,
+    }),
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+      Buffer: ['buffer', 'Buffer'],
     }),
     new CopyPlugin({
       patterns: [

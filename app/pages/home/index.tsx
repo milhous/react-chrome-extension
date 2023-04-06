@@ -1,6 +1,6 @@
 import Assets from '@assets/index';
 
-import CreateWallet from './components/CreateWallet';
+import CreatePassword from './components/CreatePassword';
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
         </dt>
         <dd className="mt-2.5 px-[48px] text-[15px] leading-6 text-dark-gray">管理您的所有加密资产！它简单易操作！</dd>
       </dl>
-      <CreateWallet />
+      <CreatePassword />
       {/* <span className="mt-4 cursor-pointer text-dark-gray">忘记密码了？</span> */}
     </section>
   );

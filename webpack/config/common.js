@@ -1,8 +1,10 @@
 import * as url from 'url';
+import {createRequire} from 'module';
 
 import {resolvePath} from '../helpers/utils.js';
 
 const __filename = url.fileURLToPath(import.meta.url);
+const require = createRequire(import.meta.url);
 
 /**
  * 通用
@@ -89,6 +91,16 @@ export default function common(devConfig, basicConfig) {
         '@pages': resolvePath('./app/pages'),
         '@ui': resolvePath('./app/ui'),
         '@widget': resolvePath('./app/widget'),
+      },
+      fallback: {
+        crypto: require.resolve('crypto-browserify'),
+        buffer: require.resolve('buffer/'),
+        events: require.resolve('events/'),
+        util: require.resolve('util/'),
+        assert: require.resolve('assert/'),
+        string_decoder: require.resolve('string_decoder/'),
+        stream: require.resolve('stream-browserify'),
+        process: require.resolve('process/browser'),
       },
     },
   };

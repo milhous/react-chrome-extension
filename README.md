@@ -1,3 +1,15 @@
+## Notes
+
+1. 插件最大高度 600 px
+
+2. seed phrase buffer 转 seed words
+
+```js
+const serialized = await primaryKeyring.serialize();
+const seedPhraseAsBuffer = Buffer.from(serialized.mnemonic);
+const revealSeedWords = Buffer.from(seedPhraseAsBuffer).toString("utf8");
+```
+
 ## Packages
 
 #### zxcvbn
@@ -6,7 +18,37 @@
 
 #### @metamask/eth-keyring-controller
 
-一个用于管理以太坊账户组的模块，称为“Keyrings”，最初是为 MetaMask 的多账户类型功能定义的。
+@metamask/eth-keyring-controller 是一个 JavaScript 库，用于管理以太坊私钥。它是 MetaMask 中的一个核心组件。
+
+提供了以下功能
+
+1. 私钥管理：可以创建、导入和删除以太坊私钥。
+
+2. 派生路径管理：可以配置派生路径，以便在使用 HD 钱包时生成多个地址。
+
+3. 签名管理：可以对交易进行签名，并支持多种签名算法和格式。
+
+4. 安全管理：可以使用密码保护私钥，并提供密码管理和错误处理功能。
+
+5. 状态管理：可以检查和管理与私钥相关的状态，如账户余额和交易历史。
+
+使用 @metamask/eth-keyring-controller，您可以在自己的应用程序中实现类似于 MetaMask 的钱包功能，从而为用户提供管理以太坊私钥的功能。
+
+#### @keystonehq/metamask-airgapped-keyring
+
+@keystonehq/metamask-airgapped-keyring 是一个 MetaMask 钱包插件，其作用是提供一种在空气隔离的设备上生成和管理以太坊私钥的方式，以增强安全性。
+
+使用 @keystonehq/metamask-airgapped-keyring，用户可以使用离线设备（例如未连接到网络的计算机、平板电脑或智能手机）生成以太坊私钥。然后，用户可以将这些私钥导入到在线设备上的 MetaMask 钱包中，以便在以太坊网络上进行交易或其他操作。
+
+@keystonehq/metamask-airgapped-keyring 的主要优点是提供更高的安全性，因为生成和管理私钥的离线设备不易受到网络攻击或恶意软件的攻击。此外，该插件还提供了方便的用户界面，使用户可以轻松地生成、导出和管理私钥。
+
+#### await-semaphore
+
+await-semaphore 是一个 JavaScript 库，它提供了一种机制来控制并发异步代码的执行。具体来说，await-semaphore 实现了一种信号量机制，使得我们可以限制同时执行的异步操作的数量。
+
+当我们需要执行多个异步操作，并且这些操作之间有一定的依赖关系或者需要保证某些操作的执行顺序时，await-semaphore 就可以发挥作用了。通过限制同时执行的异步操作的数量，await-semaphore 可以帮助我们避免并发冲突和资源竞争等问题，从而提高代码的可靠性和性能。
+
+使用 await-semaphore 可以很方便地实现一些常见的并发控制模式，比如限制同时执行的 HTTP 请求的数量、限制同时执行的数据库查询的数量、限制同时执行的文件读写操作的数量等等。
 
 ## Knowledge
 
@@ -59,3 +101,45 @@ KeyringController -> persistAllKeyrings -> this.memStore.updateState ->
 app/scripts/metamask-controller.js
 
 this.keyringController.memStore.subscribe -> \_onKeyringControllerUpdate
+
+background.js
+
+initState -> loadStateFromPersistence
+
+## Errors
+
+#### Refused to compile or instantiate WebAssembly module because neither 'wasm-eval' nor 'unsafe-eval' is an allowed source of script in the following Content Security Policy directive: "script-src 'self'"
+
+manifest.json 新增 content_security_policy
+
+```json
+{
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; frame-ancestors 'none';"
+  }
+}
+```
+
+#### Buffer is not defined && Process is not defined
+
+package.json 安装 buffer 和 process
+
+```js
+yarn add buffer process
+```
+
+webpack 新增 ProvidePlugin 配置
+
+```js
+{
+  ...
+
+  new webpack.ProvidePlugin({
+    process: 'process/browser',
+    Buffer: ['buffer', 'Buffer'],
+  }),
+
+  ...
+}
+
+```

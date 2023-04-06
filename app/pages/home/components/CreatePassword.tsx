@@ -61,8 +61,8 @@ const getPasswordStrengthLabel = (password = '') => {
   return text;
 };
 
-// 创建钱包
-export default function CreateWallet() {
+// 创建密码
+export default function CreatePassword() {
   const navigate = useNavigate();
   const {
     register,
