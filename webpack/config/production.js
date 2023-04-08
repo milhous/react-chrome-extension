@@ -44,6 +44,21 @@ export default function minimizer() {
       minimizer,
       splitChunks: {
         cacheGroups: {
+          // vendor: {
+          //   test: /[\\/]node_modules[\\/]/,
+          //   name: 'vendors',
+          //   chunks: 'all',
+          //   priority: -10,
+          //   reuseExistingChunk: true,
+          // },
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'async',
+            priority: 10,
+            reuseExistingChunk: true,
+            enforce: true,
+          },
           svg: {
             //提取出来的文件命名
             name: 'svg',
@@ -61,20 +76,6 @@ export default function minimizer() {
               return result;
             },
             priority: -10,
-          },
-          widget: {
-            //提取出来的文件命名
-            name: 'widget',
-            // 表示提取入口文件的公共部分
-            chunks: 'async',
-            //表示提取公共部分最少的文件数
-            minChunks: 2,
-            minSize: 256000,
-            maxSize: 512000,
-            enforce: true,
-            reuseExistingChunk: true,
-            test: /[\\/]widget[\\/]/,
-            priority: -5,
           },
         },
       },

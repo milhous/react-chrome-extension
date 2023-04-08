@@ -35,7 +35,7 @@ export default function plugins(devConfig, basicConfig) {
     new CopyPlugin({
       patterns: [
         {
-          from: 'manifest.json',
+          from: 'public/manifest.json',
           to: './manifest.json',
           globOptions: {
             ignore: ['**/.DS_Store'],
@@ -43,12 +43,23 @@ export default function plugins(devConfig, basicConfig) {
           noErrorOnMissing: true,
         },
         {
-          from: 'webpack/icons',
+          from: 'public/icons',
           to: './icons',
           globOptions: {
             ignore: ['**/.DS_Store'],
           },
           noErrorOnMissing: true,
+        },
+        // {
+        //   from: 'node_modules/webextension-polyfill/dist/browser-polyfill.min.js',
+        //   to: './static/js/webextension-polyfill.js',
+        // },
+        // {
+        //   from: 'node_modules/extension-port-stream/dist/index.js',
+        //   to: './static/js/extension-port-stream.js',
+        // },
+        {
+          from: 'public/app.js',
         },
       ],
     }),

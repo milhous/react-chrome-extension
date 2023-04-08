@@ -112,7 +112,7 @@ class Store {
     this._appSrc = resolvePath('./app');
     this._appDist = resolvePath('./dist');
     this._appCache = resolvePath('./.cache/webpack');
-    this._appPublic = resolvePath('./webpack/public');
+    this._appPublic = resolvePath('./public');
   }
 }
 

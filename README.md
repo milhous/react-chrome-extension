@@ -1,8 +1,10 @@
 ## Notes
 
-1. 插件最大高度 600 px
+1. Chrome 插件的最大高度 600 px
 
-2. seed phrase buffer 转 seed words
+2. Chrome 插件的内存限制是 2GB
+
+3. seed phrase buffer 转 seed words
 
 ```js
 const serialized = await primaryKeyring.serialize();
@@ -10,11 +12,40 @@ const seedPhraseAsBuffer = Buffer.from(serialized.mnemonic);
 const revealSeedWords = Buffer.from(seedPhraseAsBuffer).toString("utf8");
 ```
 
+4. mv3 background 仅支持 Service Workers
+
+在 manifest.json 中设置 "type": "module" 时，可以在 Service Worker 中使用 import 来引入 JavaScript 模块。但是没有设置 "type": "module"，则不能使用 import 语句，而必须使用 importScripts 方法来引入 JavaScript 文件。
+
+```json
+{
+  ...
+  "background": {
+    "service_worker": "app.js",
+    "type": "module"
+  },
+  ...
+}
+```
+
+通过在 app.js 中引入打包后的 background.js 文件来使用其中的模块和功能。
+
+```
+import './static/js/background.js';
+```
+
+通过使用 globalThis，我们可以在 Service Worker 中访问全局对象和变量。globalThis 提供了一个标准化的方法来访问全局对象，不受环境的影响。在浏览器中，globalThis 指向 window 对象，在 Web Worker 中，globalThis 指向 self 对象。
+
+```js
+// example
+globalThis.myGlobalVariable = "hello";
+```
+
+```js
+// service workers
+console.log(globalThis.myGlobalVariable); // logs "hello"
+```
+
 ## Packages
-
-#### zxcvbn
-
-是一个受密码破解器启发的密码强度估算器。通过模式匹配和保守估计，它根据美国人口普查数据中的 30k 个常见密码、常见名字和姓氏、维基百科上流行的英语单词以及美国电视和电影等其他常见模式来识别并加权考虑日期、重复（aaa）、序列（abcd）、键盘模式（qwertyuiop）和 l33t speak 等。
 
 #### PortStream
 
@@ -43,6 +74,60 @@ portStream.write({ greeting: "hello" });
 接下来，使用标准的流 API 监听 data 事件，并在事件回调函数中处理接收到的数据。同时，使用 write()方法将数据发送给连接另一端。
 
 需要注意的是，PortStream 库需要使用 Node.js 运行时环境，因此无法在普通的网页中使用。它只能用于扩展程序中，或者用于将扩展程序的数据流与 Node.js 模块进行集成。
+
+#### end-of-stream
+
+end-of-stream 是一个第三方 Node.js 库，它提供了一组方法用于检测和处理数据流的结束（end）事件。这个库主要用于处理 Node.js 中的数据流，但也可以在扩展程序的 background.js 中使用。
+
+在数据流中，end 事件通常表示已经读取完所有的数据，或者发送完所有的数据，因此可以在这个事件发生时进行一些清理工作，例如关闭文件、数据库连接等。在 Node.js 中，数据流通常是异步的，因此需要使用回调函数来处理 end 事件。
+
+end-of-stream 库提供了几个方便的方法来检测和处理数据流的结束事件。下面是一些常用的方法：
+
+- eos(stream, callback)：在数据流结束时调用回调函数。
+
+- eos.stream(stream)：返回一个可读流，当数据流结束时将自动触发 end 事件。
+
+- eos.writable(writable, callback)：在可写流结束时调用回调函数。
+
+- eos.duplex(stream, callback)：在双向数据流（duplex stream）结束时调用回调函数。
+
+下面是一个简单的示例，展示如何在 background.js 中使用 end-of-stream 库检测数据流的结束事件：
+
+```js
+// background.js
+
+const eos = require("end-of-stream");
+
+// 创建连接
+const port = chrome.runtime.connect({ name: "my-port" });
+
+// 处理连接请求
+chrome.runtime.onConnect.addListener((port) => {
+  console.log("Connected to port:", port.name);
+
+  // 监听端口接收到的消息
+  port.onMessage.addListener((message) => {
+    console.log("Received message:", message);
+  });
+
+  // 监听端口关闭事件
+  eos(port, (err) => {
+    if (err) {
+      console.error("Error closing port:", err);
+    } else {
+      console.log("Port closed successfully.");
+    }
+  });
+});
+```
+
+在上面的示例中，我们首先使用 require('end-of-stream')语句加载 end-of-stream 库。然后，在连接建立成功后，我们使用 eos()方法来监听端口的结束事件，并在事件发生时调用回调函数。在回调函数中，我们可以执行一些清理工作或输出一些日志信息。
+
+需要注意的是，end-of-stream 库只能用于 Node.js 运行时环境中，因此无法在普通的网页中使用。它只能用于扩展程序中，或者用于将扩展程序的数据流与 Node.js 模块进行集成。
+
+#### zxcvbn
+
+是一个受密码破解器启发的密码强度估算器。通过模式匹配和保守估计，它根据美国人口普查数据中的 30k 个常见密码、常见名字和姓氏、维基百科上流行的英语单词以及美国电视和电影等其他常见模式来识别并加权考虑日期、重复（aaa）、序列（abcd）、键盘模式（qwertyuiop）和 l33t speak 等。
 
 #### webextension-polyfill
 

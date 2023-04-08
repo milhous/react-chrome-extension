@@ -28,6 +28,6 @@
     },
     "strictNullChecks": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", "webpack/public/index.js"],
   "exclude": ["node_modules"]
 }

@@ -2693,6 +2693,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/end-of-stream@npm:^1":
+  version: 1.4.1
+  resolution: "@types/end-of-stream@npm:1.4.1::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Fend-of-stream%2F-%2Fend-of-stream-1.4.1.tgz"
+  dependencies:
+    "@types/node": "*"
+  checksum: 2aa91282bb1b2ee90f01b7075ac8c0d5480468e613211787d69249b910b0db339328ee5a0e6d7a0e7a7cd806549b811f1d9578e1af51c5425bec7ccc7a17349a
+  languageName: node
+  linkType: hard
+
 "@types/eslint-scope@npm:^3.7.3":
   version: 3.7.4
   resolution: "@types/eslint-scope@npm:3.7.4::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Feslint-scope%2F-%2Feslint-scope-3.7.4.tgz"
@@ -5708,7 +5717,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"end-of-stream@npm:^1.0.0, end-of-stream@npm:^1.1.0":
+"end-of-stream@npm:^1.0.0, end-of-stream@npm:^1.1.0, end-of-stream@npm:^1.4.4":
   version: 1.4.4
   resolution: "end-of-stream@npm:1.4.4::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fend-of-stream%2F-%2Fend-of-stream-1.4.4.tgz"
   dependencies:
@@ -6436,6 +6445,15 @@ __metadata:
     ext-list: ^2.0.0
     sort-keys-length: ^1.0.0
   checksum: f598269bd5de4295540ea7d6f8f6a01d82a7508f148b7700a05628ef6121648d26e6e5e942049e953b3051863df6b54bd8fe951e7877f185e34ace5d44370b33
+  languageName: node
+  linkType: hard
+
+"extension-port-stream@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "extension-port-stream@npm:2.0.1::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fextension-port-stream%2F-%2Fextension-port-stream-2.0.1.tgz"
+  dependencies:
+    webextension-polyfill-ts: ^0.22.0
+  checksum: e127fd94a9b7b2b847d5f292fa940b6f63d1088ea5ed6a1e3142628b358a503881f1a04e2d8ad5aec2642f7672e054e16accd933bf9cdcfa75465aba32470d07
   languageName: node
   linkType: hard
 
@@ -11149,6 +11167,7 @@ __metadata:
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
     "@svgr/webpack": ^7.0.0
     "@swc/core": ^1.3.46
+    "@types/end-of-stream": ^1
     "@types/events": ^3
     "@types/lodash": ^4
     "@types/node": ^18.15.11
@@ -11170,6 +11189,7 @@ __metadata:
     crypto-browserify: ^3.12.0
     css-loader: ^6.7.3
     css-minimizer-webpack-plugin: ^5.0.0
+    end-of-stream: ^1.4.4
     eslint: ^8.38.0
     eslint-config-next: ^13.3.0
     eslint-config-prettier: ^8.8.0
@@ -11177,6 +11197,7 @@ __metadata:
     eslint-plugin-react: ^7.32.2
     eslint-plugin-react-hooks: ^4.6.0
     events: ^3.3.0
+    extension-port-stream: ^2.0.1
     fork-ts-checker-webpack-plugin: ^8.0.0
     fs-extra: ^11.1.1
     html-webpack-plugin: ^5.5.0
@@ -13349,10 +13370,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"webextension-polyfill-ts@npm:^0.22.0":
+  version: 0.22.0
+  resolution: "webextension-polyfill-ts@npm:0.22.0::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fwebextension-polyfill-ts%2F-%2Fwebextension-polyfill-ts-0.22.0.tgz"
+  dependencies:
+    webextension-polyfill: ^0.7.0
+  checksum: b7d60c787c2041458117f837914b6bc4f03c1685174ff7b751ad19192e232fa7e71a0ac7a22d73e898856a86de198e61e9cd59c63764279127c7ee973f3202d8
+  languageName: node
+  linkType: hard
+
 "webextension-polyfill@npm:^0.10.0":
   version: 0.10.0
   resolution: "webextension-polyfill@npm:0.10.0::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fwebextension-polyfill%2F-%2Fwebextension-polyfill-0.10.0.tgz"
   checksum: 4a59036bda571360c2c0b2fb03fe1dc244f233946bcf9a6766f677956c40fd14d270aaa69cdba95e4ac521014afbe4008bfa5959d0ac39f91c990eb206587f91
+  languageName: node
+  linkType: hard
+
+"webextension-polyfill@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "webextension-polyfill@npm:0.7.0::__archiveUrl=https%3A%2F%2Fregistry.npmmirror.com%2Fwebextension-polyfill%2F-%2Fwebextension-polyfill-0.7.0.tgz"
+  checksum: fb738a5de07feb593875e02f25c3ab4276c8736118929556c8d4bdf965bb0f11c96ea263cd397b9b21259e8faf2dce2eaaa42ce08c922d96de7adb5896ec7d10
   languageName: node
   linkType: hard
 

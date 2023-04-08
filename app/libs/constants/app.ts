@@ -10,3 +10,5 @@ export const PAGE_TYPE = {
   HOME: 'home',
   NOTIFICATION: 'notification',
 };
+
+export const WORKER_KEEP_ALIVE_MESSAGE = 'WORKER_KEEP_ALIVE_MESSAGE';

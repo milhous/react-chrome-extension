@@ -7,7 +7,7 @@ import getWebpackConfig from '../config/index.js';
 
 // 启动
 async function runServer() {
-  store.init('dev', 'development', ['popup', 'home']);
+  store.init('dev', 'development', ['popup', 'home', 'background']);
 
   const devConfig = store.getDevConfig();
   const webpackConfig = await getWebpackConfig();
