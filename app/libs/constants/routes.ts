@@ -1,7 +1,7 @@
-const SECURE_WALLET = '/secure_wallet';
+const WALLET = 'wallet';
 
 const ROUTES = {
-  SECURE_WALLET,
+  WALLET,
 };
 
 export default ROUTES;

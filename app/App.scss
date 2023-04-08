@@ -2,11 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background-color: #edf1f9;
+}
+
 .app {
   @apply w-full h-full text-[15px] leading-[24px];
 
-  &-btn_primary {
-    @apply h-[46px] w-[200px] rounded-[23px] bg-primary-blue text-center text-[20px] font-semibold leading-[46px] text-white;
+  &-page {
+    @apply relative box-border w-full h-full;
+
+    &_welcome {
+      @apply bg-white;
+    }
+  }
+
+  &-section {
+    @apply relative max-w-[375px] w-full mx-auto pt-10;
+  }
+
+  &-btn {
+    @apply box-border border-solid border-primary-blue border block h-[46px] w-[200px] rounded-[23px] mx-auto text-center text-[20px] font-semibold leading-[46px];
+
+    &_primary {
+      @apply bg-primary-blue text-white;
+
+      @extend .app-btn;
+    }
+
+    &_outline {
+      @apply bg-white text-primary-blue;
+
+      @extend .app-btn;
+    }
   }
 
   &-form {

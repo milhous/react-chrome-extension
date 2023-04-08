@@ -3,8 +3,10 @@ import {Route, Routes, Navigate} from 'react-router-dom';
 
 import ROUTES from '@libs/constants/routes';
 
-import Home from '@pages/home';
-import OnboardingSecureWallet from '@pages/onboarding/SecureWallet';
+import PageWelcome from '@pages/welcome';
+import PageWallet from '@pages/wallet';
+
+import {AppProvider} from '@store/Provider';
 
 import './App.scss';
 
@@ -15,15 +17,17 @@ function App(props: {page: string}) {
 
   return (
     <StrictMode>
-      <div className="app">
-        <Suspense fallback={<p>loading...</p>}>
-          <Routes>
-            <Route index path="/" element={<Home />} />
-            <Route path="secure_wallet" element={<OnboardingSecureWallet />} />
-            <Route path="*" element={<Navigate replace to="/" />} />
-          </Routes>
-        </Suspense>
-      </div>
+      <AppProvider>
+        <div className="app">
+          <Suspense fallback={<p>loading...</p>}>
+            <Routes>
+              <Route index path="/" element={<PageWelcome />} />
+              <Route index path={ROUTES.WALLET} element={<PageWallet />} />
+              <Route path="*" element={<Navigate replace to="/" />} />
+            </Routes>
+          </Suspense>
+        </div>
+      </AppProvider>
     </StrictMode>
   );
 }

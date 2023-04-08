@@ -16,11 +16,45 @@ const revealSeedWords = Buffer.from(seedPhraseAsBuffer).toString("utf8");
 
 是一个受密码破解器启发的密码强度估算器。通过模式匹配和保守估计，它根据美国人口普查数据中的 30k 个常见密码、常见名字和姓氏、维基百科上流行的英语单词以及美国电视和电影等其他常见模式来识别并加权考虑日期、重复（aaa）、序列（abcd）、键盘模式（qwertyuiop）和 l33t speak 等。
 
+#### PortStream
+
+PortStream 是一个第三方库，它的作用是将 Chrome 扩展程序 API 中的 Port 对象转换为 Node.js 流（stream）的形式，从而方便在 background.js 中对数据流进行处理。
+
+具体来说，PortStream 库提供了一个函数 createPortStream(port)，用于将 Port 对象转换为 Node.js 流。这个流可以用于在 background.js 中接收和发送数据，同时也可以在其他 Node.js 模块中使用标准的流 API 进行数据处理。
+
+使用 PortStream 库可以让扩展程序的开发更加灵活和方便。例如，可以使用标准的流 API 对数据进行处理，而无需编写大量的代码来处理消息传递。
+
+下面是一个简单的示例，展示如何在 background.js 中使用 PortStream 库将 Port 对象转换为流并进行数据处理：
+
+```js
+const port = chrome.runtime.connect({ name: "popup" });
+
+const portStream = createPortStream(port);
+
+portStream.on("data", function (data) {
+  console.log("Received data:", data);
+});
+
+portStream.write({ greeting: "hello" });
+```
+
+在上面的示例中，首先使用 chrome.runtime.connect()方法建立一个连接，并将返回的 Port 对象传递给 createPortStream()函数。这个函数会返回一个 Readable 流，用于接收从连接另一端发送过来的数据。
+
+接下来，使用标准的流 API 监听 data 事件，并在事件回调函数中处理接收到的数据。同时，使用 write()方法将数据发送给连接另一端。
+
+需要注意的是，PortStream 库需要使用 Node.js 运行时环境，因此无法在普通的网页中使用。它只能用于扩展程序中，或者用于将扩展程序的数据流与 Node.js 模块进行集成。
+
+#### webextension-polyfill
+
+webextension-polyfill 是一个 JavaScript 库，可以在浏览器中使用 WebExtensions API。WebExtensions API 是一组在多个浏览器中使用的浏览器扩展开发 API。webextension-polyfill 的作用是使开发人员可以在使用 WebExtensions API 的同时，不必担心它们在不同浏览器中的差异。
+
+通过在代码中使用 webextension-polyfill，可以在不同的浏览器（如 Chrome，Firefox 和 Opera）中使用相同的代码，同时仍然可以访问浏览器特定的功能。webextension-polyfill 实际上是一个将 WebExtensions API 转换为浏览器原生 API 的适配器，因此可以让开发人员使用一个 API 来编写跨浏览器的扩展程序。
+
 #### @metamask/eth-keyring-controller
 
 @metamask/eth-keyring-controller 是一个 JavaScript 库，用于管理以太坊私钥。它是 MetaMask 中的一个核心组件。
 
-提供了以下功能
+提供了以下功能：
 
 1. 私钥管理：可以创建、导入和删除以太坊私钥。
 
@@ -33,6 +67,22 @@ const revealSeedWords = Buffer.from(seedPhraseAsBuffer).toString("utf8");
 5. 状态管理：可以检查和管理与私钥相关的状态，如账户余额和交易历史。
 
 使用 @metamask/eth-keyring-controller，您可以在自己的应用程序中实现类似于 MetaMask 的钱包功能，从而为用户提供管理以太坊私钥的功能。
+
+#### @metamask/base-controlle
+
+@metamask/base-controller 是 MetaMask 钱包中的一个 JavaScript 模块，用于处理应用程序的主要业务逻辑和与以太坊网络的交互。
+
+该模块提供了一个抽象的基础控制器类 BaseController，其他的控制器都继承自这个基类。BaseController 提供了一些通用的方法和属性，如 networkStore 和 preferencesController 等，这些方法和属性在其他控制器中都可以被访问和使用。
+
+主要负责以下几个方面的工作：
+
+1. 管理以太坊网络的连接状态和版本信息，例如 networkStore 对象就提供了一个 API，用于获取当前网络的信息和切换网络。
+
+2. 处理用户的账户信息和交易，例如 keyringController 对象就提供了一个 API，用于创建和管理账户和处理交易。
+
+3. 提供了一些公共的工具方法和事件处理机制，例如 BaseController 类中就提供了一些事件和钩子函数，用于处理一些共性逻辑，如初始化、销毁等。
+
+总之，@metamask/base-controller 模块是 MetaMask 钱包中的一个核心模块，提供了基础的控制器类和公共方法，方便其他模块进行开发和扩展。
 
 #### @keystonehq/metamask-airgapped-keyring
 
@@ -70,6 +120,8 @@ await-semaphore 是一个 JavaScript 库，它提供了一种机制来控制并�
 
 ## Flow
 
+\_loginUser \_startUISync
+
 ui/pages/onboarding-flow/onboarding-flow.js
 
 createNewVaultAndGetSeedPhrase ->
@@ -105,6 +157,21 @@ this.keyringController.memStore.subscribe -> \_onKeyringControllerUpdate
 background.js
 
 initState -> loadStateFromPersistence
+
+#### unlock
+
+ui/pages/unlock-page/unlock-page.container.js
+tryUnlockMetamask(password)
+
+ui/store/actions.ts
+
+tryUnlockMetamask -> showLoadingIndication -> unlockInProgress -> unlockSucceeded -> forceUpdateMetamaskState - hideLoadingIndication
+
+tryUnlockMetamask -> showLoadingIndication -> unlockInProgress -> unlockFailed -> hideLoadingIndication
+
+app/scripts/metamask-controller.js
+
+submitPassword(password)
 
 ## Errors
 

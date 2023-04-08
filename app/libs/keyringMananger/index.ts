@@ -5,10 +5,15 @@ import {Mutex} from 'await-semaphore';
 
 interface IKeyringMananger {
   createNewVaultAndKeychain(password: string): Promise<any>;
+  createNewVaultAndRestore(password: string, encodedSeedPhrase: string): Promise<any>;
   verifyPassword(password: string): Promise<void>;
   verifySeedPhrase(): Promise<number[]>;
   verifyAccounts(createdAccounts: string[], seedPhrase: Buffer): Promise<void>;
+  exportAccount(address: string, password: string): Promise<string>;
+  isUnlocked(): boolean;
   getPrimaryKeyringMnemonic(): any;
+  getPrimaryKey(): Promise<string>;
+  getAccounts(): Promise<string[]>;
 }
 
 // Keyring 管理器
@@ -50,6 +55,42 @@ class KeyringMananger {
   }
 
   //=============================================================================
+  // EXPOSED TO THE UI SUBSYSTEM
+  //=============================================================================
+
+  /**
+   * The metamask-state of the various controllers, made available to the UI
+   *
+   * @returns {object} status
+   */
+  getState(): object {
+    const {vault} = this._keyringController.store.getState();
+    const isInitialized = Boolean(vault);
+
+    return {
+      isInitialized,
+      // ...this.memStore.getFlatState(),
+    };
+  }
+
+  /**
+   * Locks MetaMask
+   */
+  setLocked() {
+    // const [trezorKeyring] = this.keyringController.getKeyringsByType(KeyringType.trezor);
+    // if (trezorKeyring) {
+    //   trezorKeyring.dispose();
+    // }
+
+    // const [ledgerKeyring] = this.keyringController.getKeyringsByType(KeyringType.ledger);
+    // ledgerKeyring?.destroy?.();
+
+    this.clearLoginArtifacts();
+
+    return this._keyringController.setLocked();
+  }
+
+  //=============================================================================
   // VAULT / KEYRING RELATED METHODS
   //=============================================================================
 
@@ -79,6 +120,33 @@ class KeyringMananger {
         const addresses = await this._keyringController.getAccounts();
         // this.preferencesController.setAddresses(addresses);
         // this.selectFirstIdentity();
+      }
+
+      return vault;
+    } finally {
+      releaseLock();
+    }
+  }
+
+  /**
+   * Create a new Vault and restore an existent keyring.
+   *
+   * @param {string} password
+   * @param {string} encodedSeedPhrase - The seed phrase, encoded as an array
+   * of UTF-8 bytes.
+   */
+  async createNewVaultAndRestore(password: string, encodedSeedPhrase: string) {
+    const releaseLock = await this._createVaultMutex.acquire();
+
+    try {
+      const seedPhraseAsBuffer = Buffer.from(encodedSeedPhrase);
+
+      // create new vault
+      const vault = await this._keyringController.createNewVaultAndRestore(password, seedPhraseAsBuffer);
+      const [primaryKeyring] = this._keyringController.getKeyringsByType(KeyringType.hdKeyTree);
+
+      if (!primaryKeyring) {
+        throw new Error('MetamaskController - No HD Key Tree found');
       }
 
       return vault;
@@ -172,6 +240,52 @@ class KeyringMananger {
   }
 
   /**
+   * Export Account
+   * @param {string} address - 地址
+   * @param {string} password - 密码
+   */
+  public async exportAccount(address: string, password: string): Promise<string> {
+    await this.verifyPassword(password);
+
+    return this._keyringController.exportAccount(address, password);
+  }
+
+  /**
+   * Submits the user's password and attempts to unlock the vault.
+   * Also synchronizes the preferencesController, to ensure its schema
+   * is up to date with known accounts once the vault is decrypted.
+   *
+   * @param {string} password - The user's password
+   * @returns {Promise<object>} The keyringController update.
+   */
+  async submitPassword(password: string): Promise<object> {
+    await this._keyringController.submitPassword(password);
+
+    // try {
+    //   await this.blockTracker.checkForLatestBlock();
+    // } catch (error) {
+    //   log.error('Error while unlocking extension.', error);
+    // }
+
+    // This must be set as soon as possible to communicate to the
+    // keyring's iframe and have the setting initialized properly
+    // Optimistically called to not block MetaMask login due to
+    // Ledger Keyring GitHub downtime
+    // const transportPreference = this.preferencesController.getLedgerTransportPreference();
+
+    // this.setLedgerTransportPreference(transportPreference);
+
+    return this._keyringController.fullUpdate();
+  }
+
+  /**
+   * @returns {boolean} Whether the extension is unlocked.
+   */
+  public isUnlocked(): boolean {
+    return this._keyringController.memStore.getState().isUnlocked;
+  }
+
+  /**
    * Gets the mnemonic of the user's primary keyring.
    */
   public getPrimaryKeyringMnemonic(): any {
@@ -182,6 +296,60 @@ class KeyringMananger {
     }
 
     return keyring.mnemonic;
+  }
+
+  /**
+   * Gets Primary Key
+   * @returns {string}
+   */
+  public async getPrimaryKeyringImported(): Promise<string> {
+    const [keyring] = this._keyringController.getKeyringsByType(KeyringType.imported);
+
+    if (!keyring) {
+      throw new Error('Primary keyring is does not exist');
+    }
+
+    const pubAddressHexArr = await keyring.getAccounts();
+    const privKeyHex = await keyring.exportAccount(pubAddressHexArr[0]);
+
+    return privKeyHex;
+  }
+
+  /**
+   * Get Accounts
+   */
+  public async getAccounts(): Promise<string[]> {
+    const accounts = await this._keyringController.getAccounts();
+
+    return accounts;
+  }
+
+  /**
+   * Submits a user's encryption key to log the user in via login token
+   */
+  async submitEncryptionKey() {
+    // try {
+    //   const {loginToken, loginSalt} = await browser.storage.session.get(['loginToken', 'loginSalt']);
+    //   if (loginToken && loginSalt) {
+    //     const {vault} = this.keyringController.store.getState();
+    //     const jsonVault = JSON.parse(vault);
+    //     if (jsonVault.salt !== loginSalt) {
+    //       console.warn('submitEncryptionKey: Stored salt and vault salt do not match');
+    //       await this.clearLoginArtifacts();
+    //       return;
+    //     }
+    //     await this._keyringController.submitEncryptionKey(loginToken, loginSalt);
+    //   }
+    // } catch (e) {
+    //   // If somehow this login token doesn't work properly,
+    //   // remove it and the user will get shown back to the unlock screen
+    //   await this.clearLoginArtifacts();
+    //   throw e;
+    // }
+  }
+
+  async clearLoginArtifacts() {
+    //await browser.storage.session.remove(['loginToken', 'loginSalt']);
   }
 
   /**
@@ -211,10 +379,39 @@ class KeyringMananger {
   }
 
   private _onLock() {
+    // this.notifyAllConnections({
+    //   method: NOTIFICATION_NAMES.unlockStateChanged,
+    //   params: {
+    //     isUnlocked: false,
+    //   },
+    // });
+
+    // // In the current implementation, this handler is triggered by a
+    // // KeyringController event. Other controllers subscribe to the 'lock'
+    // // event of the MetaMaskController itself.
+    // this.emit('lock');
+
     console.log('lock');
   }
 
   private _onUnlock() {
+    // this.notifyAllConnections(async (origin) => {
+    //   return {
+    //     method: NOTIFICATION_NAMES.unlockStateChanged,
+    //     params: {
+    //       isUnlocked: true,
+    //       accounts: await this.getPermittedAccounts(origin),
+    //     },
+    //   };
+    // });
+
+    // this.unMarkPasswordForgotten();
+
+    // // In the current implementation, this handler is triggered by a
+    // // KeyringController event. Other controllers subscribe to the 'unlock'
+    // // event of the MetaMaskController itself.
+    // this.emit('unlock');
+
     console.log('unlock');
   }
 }

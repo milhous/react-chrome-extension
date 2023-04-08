@@ -87,6 +87,7 @@ export default function common(devConfig, basicConfig) {
       ],
       alias: {
         '@assets': resolvePath('./app/assets'),
+        '@store': resolvePath('./app/store'),
         '@libs': resolvePath('./app/libs'),
         '@pages': resolvePath('./app/pages'),
         '@ui': resolvePath('./app/ui'),

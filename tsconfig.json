@@ -20,6 +20,7 @@
     "noImplicitAny": false,
     "paths": {
       "@assets/*": ["app/assets/*"],
+      "@store/*": ["app/store/*"],
       "@libs/*": ["app/libs/*"],
       "@pages/*": ["app/pages/*"],
       "@ui/*": ["app/ui/*"],

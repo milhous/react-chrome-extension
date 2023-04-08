@@ -6,9 +6,11 @@ import {useForm, SubmitHandler} from 'react-hook-form';
 import zxcvbn from 'zxcvbn';
 import classnames from 'classnames';
 
+import Assets from '@assets/index';
 import ROUTES from '@libs/constants/routes';
 import {PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH} from '@libs/constants/form';
-import Assets from '@assets/index';
+import {ACTIONS_TYPE} from '@store/types';
+import {useAppState} from '@store/Provider';
 
 interface IFormInput {
   password: string;
@@ -62,8 +64,9 @@ const getPasswordStrengthLabel = (password = '') => {
 };
 
 // 创建密码
-export default function CreatePassword() {
+export default function CreateAccount() {
   const navigate = useNavigate();
+  const {state, dispatch} = useAppState();
   const {
     register,
     handleSubmit,
@@ -71,6 +74,7 @@ export default function CreatePassword() {
     setError,
     formState: {errors},
   } = useForm<IFormInput>();
+
   const [inputTypeFocus, setInputTypeFocus] = useState<number>(InputType.NONE);
   const [passwordStrength, setPasswordStrength] = useState<string>('');
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
@@ -88,7 +92,12 @@ export default function CreatePassword() {
       return;
     }
 
-    navigate(ROUTES.SECURE_WALLET);
+    dispatch({
+      type: ACTIONS_TYPE.CREATE_ACCOUNT,
+      payload: {
+        password: deferredPassword,
+      },
+    });
   };
 
   const handlePasswordVisible = (type: string) => {
@@ -119,6 +128,12 @@ export default function CreatePassword() {
 
     setConfirmPasswordError(text);
   }, [deferredPassword, deferredConfirmPassword]);
+
+  useEffect(() => {
+    if (state.password === deferredConfirmPassword) {
+      navigate(ROUTES.WALLET);
+    }
+  }, [state.password]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
