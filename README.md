@@ -1,3 +1,7 @@
+## 参考 [metamask-extension](https://github.com/MetaMask/metamask-extension) 学习开发 Chrome Extension
+
+[下载地址](https://github.com/milhous/react-chrome-extension/releases/tag/1.0.0)
+
 ## Metamask 私钥相关
 
 #### 主要 Package
