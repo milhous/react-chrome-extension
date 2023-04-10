@@ -2,15 +2,17 @@
 
 import {useDeferredValue, useEffect, useMemo, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
+import {useSelector} from 'react-redux';
 import {useForm, SubmitHandler} from 'react-hook-form';
 import zxcvbn from 'zxcvbn';
 import classnames from 'classnames';
 
 import Assets from '@assets/index';
+import {MESSAGE_TYPE} from '@libs/constants/app';
 import ROUTES from '@libs/constants/routes';
 import {PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH} from '@libs/constants/form';
-import {ACTIONS_TYPE} from '@store/types';
-import {useAppState} from '@store/Provider';
+import messageManager from '@libs/messageManager';
+import {IAppStoreState} from '@store/types';
 
 interface IFormInput {
   password: string;
@@ -66,7 +68,9 @@ const getPasswordStrengthLabel = (password = '') => {
 // 创建密码
 export default function CreateAccount() {
   const navigate = useNavigate();
-  const {state, dispatch} = useAppState();
+  const isUnlocked = useSelector<IAppStoreState>(state => {
+    return state.app.isUnlocked;
+  });
   const {
     register,
     handleSubmit,
@@ -87,13 +91,13 @@ export default function CreateAccount() {
     return checkValid(deferredPassword, deferredConfirmPassword);
   }, [deferredPassword, deferredConfirmPassword]);
 
-  const onSubmit: SubmitHandler<IFormInput> = async data => {
+  const onSubmit: SubmitHandler<IFormInput> = data => {
     if (!isValid) {
       return;
     }
 
-    dispatch({
-      type: ACTIONS_TYPE.CREATE_ACCOUNT,
+    messageManager.sendMessage({
+      type: MESSAGE_TYPE.CREATE_ACCOUNT,
       payload: {
         password: deferredPassword,
       },
@@ -130,10 +134,10 @@ export default function CreateAccount() {
   }, [deferredPassword, deferredConfirmPassword]);
 
   useEffect(() => {
-    if (state.password === deferredConfirmPassword) {
+    if (isUnlocked) {
       navigate(ROUTES.WALLET);
     }
-  }, [state.password]);
+  }, [isUnlocked]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -192,7 +196,7 @@ export default function CreateAccount() {
           <p className="app-form_info">{confirmPasswordError}</p>
         </div>
         <button className="app-btn_primary" type="submit">
-          创建钱包
+          创建账户
         </button>
       </div>
     </form>

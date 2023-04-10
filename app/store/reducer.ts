@@ -1,32 +1,29 @@
-import {IAppState, IAppAction, ACTIONS_TYPE} from './types';
+import {createSlice} from '@reduxjs/toolkit';
+import {IAppState} from './types';
 
 // 初始化状态
 export const initialState: IAppState = {
-  password: '',
+  isInitialized: false,
+  isUnlocked: false,
+  address: '',
+  mnemonicWords: '',
+  privateKey: '',
 };
 
-// BatchQueryBalance reducer
-export const reducer = (state: IAppState, action: IAppAction): any => {
-  switch (action.type) {
-    case ACTIONS_TYPE.CREATE_ACCOUNT: {
-      const {password} = action.payload;
+export const appSlice = createSlice({
+  name: 'app',
+  initialState,
+  reducers: {
+    update: (state, action) => {
+      const {payload} = action;
 
-      console.log('password', password);
+      for (const key in payload) {
+        state[key] = payload[key];
+      }
+    },
+  },
+});
 
-      return {
-        ...state,
-        password,
-      };
-    }
-    case ACTIONS_TYPE.UNLOCK: {
-      const {password} = action.payload;
+export const {update} = appSlice.actions;
 
-      return {
-        ...state,
-        password,
-      };
-    }
-    default:
-      throw new Error('Unexpected action');
-  }
-};
+export default appSlice.reducer;

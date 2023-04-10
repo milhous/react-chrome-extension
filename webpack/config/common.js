@@ -12,8 +12,8 @@ const require = createRequire(import.meta.url);
  * @param {IBasicConfig} basicConfig 基础配置
  */
 export default function common(devConfig, basicConfig) {
-  let devtool = false;
   // let filename = 'static/js/[name].[fullhash:8].js';
+  let devtool = false;
   let filename = 'static/js/[name].js';
   let chunkFilename = 'static/js/[name].[contenthash:8].js';
   let assetModuleFilename = 'static/assets/[name].[contenthash:8][ext][query]';

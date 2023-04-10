@@ -1,1 +1,1 @@
-import"./static/js/background.js";self.addEventListener("install",s=>{console.log(1111,globalThis.init)});
+import"./static/js/background.js";self.addEventListener("install",e=>{console.log("Service Worker install")});

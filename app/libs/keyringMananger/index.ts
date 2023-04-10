@@ -1,29 +1,52 @@
+import EventEmitter from 'events';
+import browser from 'webextension-polyfill';
 import {KeyringController, keyringBuilderFactory} from '@metamask/eth-keyring-controller';
 import {MetaMaskKeyring as QRHardwareKeyring} from '@keystonehq/metamask-airgapped-keyring';
 import {KeyringType} from '@libs/constants/keyring';
 import {Mutex} from 'await-semaphore';
 
+/**
+ * 声明 - 初始化 Keyring 管理器
+ * @property {object} initState - 初始化状态
+ * @property {object} encryptor - 加密器
+ * @property {boolean} isManifestV3 - 是否是 manifest v3
+ */
+interface IKeyringManangerInitParams {
+  initState?: any;
+  encryptor?: any;
+  isManifestV3?: boolean;
+}
+
 interface IKeyringMananger {
+  init(params?: IKeyringManangerInitParams): void;
   createNewVaultAndKeychain(password: string): Promise<any>;
   createNewVaultAndRestore(password: string, encodedSeedPhrase: string): Promise<any>;
   verifyPassword(password: string): Promise<void>;
   verifySeedPhrase(): Promise<number[]>;
   verifyAccounts(createdAccounts: string[], seedPhrase: Buffer): Promise<void>;
   exportAccount(address: string, password: string): Promise<string>;
+  submitPassword(password: string): Promise<object>;
   isUnlocked(): boolean;
+  setLocked(): Promise<void>;
   getPrimaryKeyringMnemonic(): any;
   getPrimaryKey(): Promise<string>;
   getAccounts(): Promise<string[]>;
+  getState(): any;
+  getMemState(): any;
+  isInitialized(): boolean;
+  on(eventName: string | symbol, listener: (...args: any[]) => void);
+  off(eventName: string | symbol, listener: () => void);
 }
 
 // Keyring 管理器
-class KeyringMananger {
+class KeyringMananger extends EventEmitter {
   private _isManifestV3 = true;
   private _createVaultMutex = new Mutex();
   private _keyringController: KeyringController;
+  private _isInitialized = false;
 
   constructor() {
-    this._init();
+    super();
   }
 
   static instance;
@@ -36,15 +59,21 @@ class KeyringMananger {
     return KeyringMananger.instance;
   }
 
-  private _init() {
+  /**
+   * 初始化 Keyring 管理器
+   * @param {object} initState - 初始化状态
+   * @param {object} encryptor - 加密器
+   * @param {boolean} isManifestV3 - 是否是 manifest v3
+   */
+  public init({initState = {}, encryptor = undefined, isManifestV3 = true}: IKeyringManangerInitParams = {}) {
     const additionalKeyrings = [keyringBuilderFactory(QRHardwareKeyring)];
-    const encryptor = undefined;
-    const initState = {};
+
+    this._isManifestV3 = isManifestV3;
 
     this._keyringController = new KeyringController({
       keyringBuilders: additionalKeyrings,
-      initState: undefined, // initState?.KeyringController,
-      encryptor: encryptor || undefined,
+      initState,
+      encryptor: encryptor,
       cacheEncryptionKey: this._isManifestV3,
     });
 
@@ -63,20 +92,34 @@ class KeyringMananger {
    *
    * @returns {object} status
    */
-  getState(): object {
-    const {vault} = this._keyringController.store.getState();
-    const isInitialized = Boolean(vault);
+  getState(): any {
+    const state = this._keyringController.store.getState();
 
-    return {
-      isInitialized,
-      // ...this.memStore.getFlatState(),
-    };
+    return state;
+  }
+
+  getMemState(): any {
+    const state = this._keyringController.memStore.getState();
+
+    return state;
+  }
+
+  isInitialized(): boolean {
+    let isInitialized = false;
+
+    if (!!this._keyringController && !!this._keyringController.store) {
+      const {vault} = this.getState();
+
+      isInitialized = Boolean(vault);
+    }
+
+    return isInitialized;
   }
 
   /**
    * Locks MetaMask
    */
-  setLocked() {
+  async setLocked(): Promise<void> {
     // const [trezorKeyring] = this.keyringController.getKeyringsByType(KeyringType.trezor);
     // if (trezorKeyring) {
     //   trezorKeyring.dispose();
@@ -85,9 +128,9 @@ class KeyringMananger {
     // const [ledgerKeyring] = this.keyringController.getKeyringsByType(KeyringType.ledger);
     // ledgerKeyring?.destroy?.();
 
-    this.clearLoginArtifacts();
+    await this.clearLoginArtifacts();
 
-    return this._keyringController.setLocked();
+    await this._keyringController.setLocked();
   }
 
   //=============================================================================
@@ -349,7 +392,7 @@ class KeyringMananger {
   }
 
   async clearLoginArtifacts() {
-    //await browser.storage.session.remove(['loginToken', 'loginSalt']);
+    await browser.storage.session.remove(['loginToken', 'loginSalt']);
   }
 
   /**
@@ -362,12 +405,17 @@ class KeyringMananger {
   private async _onKeyringControllerUpdate(state) {
     const {keyrings, encryptionKey: loginToken, encryptionSalt: loginSalt} = state;
     const addresses = keyrings.reduce((acc, {accounts}) => acc.concat(accounts), []);
+    const {vault} = this.getState();
 
-    console.log('subscribe state', state, addresses);
+    this._isInitialized = Boolean(vault);
 
-    // if (this._isManifestV3) {
-    //   await browser.storage.session.set({loginToken, loginSalt});
-    // }
+    if (this._isManifestV3) {
+      await browser.storage.session.set({loginToken, loginSalt});
+    }
+
+    this.emit('update');
+
+    console.log('subscribe state', state);
 
     // if (!addresses.length) {
     //   return;
@@ -386,10 +434,10 @@ class KeyringMananger {
     //   },
     // });
 
-    // // In the current implementation, this handler is triggered by a
-    // // KeyringController event. Other controllers subscribe to the 'lock'
-    // // event of the MetaMaskController itself.
-    // this.emit('lock');
+    // In the current implementation, this handler is triggered by a
+    // KeyringController event. Other controllers subscribe to the 'lock'
+    // event of the MetaMaskController itself.
+    this.emit('lock');
 
     console.log('lock');
   }
@@ -407,10 +455,10 @@ class KeyringMananger {
 
     // this.unMarkPasswordForgotten();
 
-    // // In the current implementation, this handler is triggered by a
-    // // KeyringController event. Other controllers subscribe to the 'unlock'
-    // // event of the MetaMaskController itself.
-    // this.emit('unlock');
+    // In the current implementation, this handler is triggered by a
+    // KeyringController event. Other controllers subscribe to the 'unlock'
+    // event of the MetaMaskController itself.
+    this.emit('unlock');
 
     console.log('unlock');
   }

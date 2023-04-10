@@ -1,23 +1,9 @@
-import React, {createContext, useReducer, useContext, useMemo} from 'react';
+import React from 'react';
+import {Provider} from 'react-redux';
 
-import {IAppContextProps} from './types';
-import {reducer, initialState} from './reducer';
-
-const CountContext = createContext({} as IAppContextProps);
+import store from './index';
 
 // APP Provider
 export function AppProvider({children}: {children: React.ReactNode}): JSX.Element {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const contextValue = useMemo(() => {
-    return {state, dispatch};
-  }, [state, dispatch]);
-
-  return <CountContext.Provider value={contextValue}>{children}</CountContext.Provider>;
+  return <Provider store={store}>{children}</Provider>;
 }
-
-// APP Hook
-export const useAppState = () => {
-  const contextValue = useContext(CountContext);
-
-  return contextValue;
-};

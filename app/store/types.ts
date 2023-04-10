@@ -1,11 +1,20 @@
 import React from 'react';
+import store from './index';
 
 /**
  * 声明 - APP 状态
- * @property {string} password 密码
+ * @property {boolean} isInitialized - 第一个保险库是否已经创建
+ * @property {boolean} isUnlocked - 保险库当前是否已解密并且账户可供选择
+ * @property {string} address - 保险库当前账户的地址
+ * @property {string} mnemonicWords - 保险库当前账户的助记词
+ * @property {string} privateKey - 保险库当前账户的私钥
  */
 export interface IAppState {
-  password: string;
+  isInitialized: boolean;
+  isUnlocked: boolean;
+  address: string;
+  mnemonicWords: string;
+  privateKey: string;
 }
 
 /**
@@ -28,12 +37,6 @@ export interface IAppContextProps {
   dispatch: React.Dispatch<IAppAction>;
 }
 
-/**
- * ACTIONS 类型
- * @property CREATE_ACCOUNT 创建账户
- * @property UNLOCK 解锁
- */
-export const ACTIONS_TYPE = {
-  CREATE_ACCOUNT: 'CREATE_ACCOUNT',
-  UNLOCK: 'UNLOCK',
-};
+export type IAppStoreState = ReturnType<typeof store.getState>;
+
+export type IAppStoreDispatch = typeof store.dispatch;

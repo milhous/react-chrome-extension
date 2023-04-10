@@ -258,6 +258,14 @@ app/scripts/metamask-controller.js
 
 submitPassword(password)
 
+#### store
+
+app/scripts/background.js
+
+app/scripts/lib/local-store.js
+
+app/scripts/migrations/005.js
+
 ## Errors
 
 #### Refused to compile or instantiate WebAssembly module because neither 'wasm-eval' nor 'unsafe-eval' is an allowed source of script in the following Content Security Policy directive: "script-src 'self'"
@@ -294,4 +302,23 @@ webpack 新增 ProvidePlugin 配置
   ...
 }
 
+```
+
+#### Service worker window.crypto is not defined
+
+1. 下载 @metamask/browser-passworder 源码，并且移除源码中的 window。
+
+2. 使用改造后的源码，替换 keyringMananger encryptor。
+
+```js
+// On first install, open a new tab with MetaMask
+browser.runtime.onInstalled.addListener(({ reason }) => {
+  if (reason === "install" || reason === "update") {
+    keyringMananger.init({
+      encryptor: encryptorUtils,
+    });
+  }
+
+  console.log("browser.runtime.onInstalled", reason);
+});
 ```
