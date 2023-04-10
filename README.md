@@ -379,6 +379,14 @@ pump 是一个 Node.js 模块，它提供了一个方便的方法将两个数据
 
 使用 pump 可以简化数据流处理的代码，避免手动处理各种事件和错误。
 
+#### @metamask/browser-passworder
+
+@metamask/browser-passworder 是 Metamask 中一个用于加密和解密敏感数据的库。它的作用是在浏览器中加密 Metamask 用户的私钥和助记词等敏感数据，从而保护用户的资产安全。
+
+具体来说，@metamask/browser-passworder 使用了 PBKDF2（密码基于密钥的导出函数 2）算法和 AES-256（高级加密标准 256 位）加密算法来加密和解密数据。用户在使用 Metamask 时需要设置一个密码，并使用该密码加密他们的私钥和助记词等数据。当用户需要访问这些数据时，需要提供密码进行解密。
+
+@metamask/browser-passworder 还可以用于加密和解密其他任何敏感数据，例如用户设置和存储在本地浏览器中的应用程序数据。这些数据将受到与私钥和助记词相同的保护级别，以确保用户的隐私和安全。
+
 ## Knowledge
 
 #### BIP39、BIP44、BIP32 协议
