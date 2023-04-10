@@ -16,7 +16,29 @@
 
 1. background.js localstore 传递给 metamask-controller.js
 
+```js
+const localStore = inTest ? new ReadOnlyNetworkStore() : new LocalStore();
+
+export function setupController(initState, initLangCode, overrides) {
+  //
+  // MetaMask Controller
+  //
+
+  controller = new MetamaskController({
+    ...
+    localStore,
+    ...
+  });
+}
+
+```
+
 2. metamask-controller.js localStore 赋值给 this.localStoreApiWrapper
+
+```js
+// instance of a class that wraps the extension's storage local API.
+this.localStoreApiWrapper = opts.localStore;
+```
 
 3. metamask-controller.js setupControllerConnection 定义数据监听
 
