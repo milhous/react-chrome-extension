@@ -1,3 +1,161 @@
+## Metamask 私钥相关
+
+#### 主要 Package
+
+- webextension-polyfill
+
+- @metamask/eth-keyring-controller
+
+- @keystonehq/metamask-airgapped-keyring
+
+- obj-multiplex
+
+- pump
+
+#### 存储流程
+
+1. background.js localstore 传递给 metamask-controller.js
+
+2. metamask-controller.js localStore 赋值给 this.localStoreApiWrapper
+
+3. metamask-controller.js setupControllerConnection 定义数据监听
+
+```js
+// set up postStream transport
+outStream.on(
+  "data",
+  createMetaRPCHandler(api, outStream, this.store, this.localStoreApiWrapper)
+);
+```
+
+4. createMetaRPCHandler.js 中，每当执行控制器方法的时候，如果方法名不是 getState，就会获取控制器状态，并保存到 localStore 中。
+
+```js
+try {
+  result = await api[data.method](...data.params);
+} catch (err) {
+  error = err;
+} finally {
+  if (isManifestV3 && store && data.method !== "getState") {
+    localStoreApiWrapper.set(store.getState());
+  }
+}
+```
+
+#### 初始流程
+
+在 background.js 中每次打开插件建立通信连接时执行 initialize，从 browser.storage.local 中获取初始化数据并同步保存，初始化相关控制器，
+
+```js
+export async function loadStateFromPersistence() {
+  // migrations
+  const migrator = new Migrator({ migrations });
+  migrator.on("error", console.warn);
+
+  // read from disk
+  // first from preferred, async API:
+  versionedData =
+    (await localStore.get()) || migrator.generateInitialState(firstTimeState);
+
+  // check if somehow state is empty
+  // this should never happen but new error reporting suggests that it has
+  // for a small number of users
+  // https://github.com/metamask/metamask-extension/issues/3919
+  if (versionedData && !versionedData.data) {
+    // unable to recover, clear state
+    versionedData = migrator.generateInitialState(firstTimeState);
+    sentry.captureMessage("MetaMask - Empty vault found - unable to recover");
+  }
+
+  // report migration errors to sentry
+  migrator.on("error", (err) => {
+    // get vault structure without secrets
+    const vaultStructure = getObjStructure(versionedData);
+    sentry.captureException(err, {
+      // "extra" key is required by Sentry
+      extra: { vaultStructure },
+    });
+  });
+
+  // migrate data
+  versionedData = await migrator.migrateData(versionedData);
+  if (!versionedData) {
+    throw new Error("MetaMask - migrator returned undefined");
+  }
+  // this initializes the meta/version data as a class variable to be used for future writes
+  localStore.setMetadata(versionedData.meta);
+
+  // write to disk
+  localStore.set(versionedData.data);
+
+  // return just the data
+  return versionedData.data;
+}
+```
+
+#### 创建流程
+
+1. 在 metamask-controller.js 中执行 createNewVaultAndKeychain，完成后触发 \_onKeyringControllerUpdate，保存 loginToken 和 loginSalt。
+
+2. 利用临时保存的 loginToken 和 loginSalt，可以执行 submitEncryptionKey 实现登录
+
+metamask-controller.js 代码片段：
+
+```js
+async _onKeyringControllerUpdate(state) {
+  const {
+    keyrings,
+    encryptionKey: loginToken,
+    encryptionSalt: loginSalt,
+  } = state;
+  const addresses = keyrings.reduce(
+    (acc, { accounts }) => acc.concat(accounts),
+    [],
+  );
+
+  if (isManifestV3) {
+    await browser.storage.session.set({ loginToken, loginSalt });
+  }
+
+  if (!addresses.length) {
+    return;
+  }
+
+  // Ensure preferences + identities controller know about all addresses
+  this.preferencesController.syncAddresses(addresses);
+  this.accountTracker.syncWithAddresses(addresses);
+}
+
+async submitEncryptionKey() {
+  try {
+    const { loginToken, loginSalt } = await browser.storage.session.get([
+      'loginToken',
+      'loginSalt',
+    ]);
+    if (loginToken && loginSalt) {
+      const { vault } = this.keyringController.store.getState();
+
+      const jsonVault = JSON.parse(vault);
+
+      if (jsonVault.salt !== loginSalt) {
+        console.warn(
+          'submitEncryptionKey: Stored salt and vault salt do not match',
+        );
+        await this.clearLoginArtifacts();
+        return;
+      }
+
+      await this.keyringController.submitEncryptionKey(loginToken, loginSalt);
+    }
+  } catch (e) {
+    // If somehow this login token doesn't work properly,
+    // remove it and the user will get shown back to the unlock screen
+    await this.clearLoginArtifacts();
+    throw e;
+  }
+}
+```
+
 ## Notes
 
 1. Chrome 插件的最大高度 600 px
@@ -185,6 +343,18 @@ await-semaphore 是一个 JavaScript 库，它提供了一种机制来控制并�
 
 使用 await-semaphore 可以很方便地实现一些常见的并发控制模式，比如限制同时执行的 HTTP 请求的数量、限制同时执行的数据库查询的数量、限制同时执行的文件读写操作的数量等等。
 
+#### obj-multiplex
+
+obj-multiplex 是一个 Node.js 模块，提供了将多个 Node.js 可读流（Readable stream）和可写流（Writable stream）进行复用的能力。它可以将多个数据流（例如通过网络传输的数据）进行多路复用，并且保证各自之间互不干扰，这对于并行传输多个数据流非常有用。obj-multiplex 的实现依赖于 Node.js 的 stream.Duplex 类，因此它也支持双向通信。在实际应用中，obj-multiplex 主要用于多个模块之间的通信，例如在 Electron 应用程序中，obj-multiplex 可以用于主进程与渲染进程之间的通信。
+
+#### pump
+
+pump 是一个 Node.js 模块，它提供了一个方便的方法将两个数据流串联在一起，同时在这两个数据流之间正确地处理错误和关闭事件。
+
+具体来说，pump 可以将一个可读流和一个可写流连接在一起，将可读流的数据传输到可写流中。它还会自动处理错误事件和关闭事件，确保在任何时候都不会出现内存泄漏或错误的行为。
+
+使用 pump 可以简化数据流处理的代码，避免手动处理各种事件和错误。
+
 ## Knowledge
 
 #### BIP39、BIP44、BIP32 协议
@@ -203,72 +373,9 @@ await-semaphore 是一个 JavaScript 库，它提供了一种机制来控制并�
 
 [BIP39、BIP44、BIP32 协议](https://fpchen.readthedocs.io/zh/latest/note/BlockChain/wallet/BIP39-BIP32-BIP44.html#)
 
-## Flow
-
-\_loginUser \_startUISync
-
-ui/pages/onboarding-flow/onboarding-flow.js
-
-createNewVaultAndGetSeedPhrase ->
-
-ui/store/actions.js
-
-createNewVaultAndGetSeedPhrase -> createNewVault -> createNewVaultAndKeychain ->
-
-app/scripts/metamask-controller.js
-
-createNewVaultAndKeychain ->
-
-ui/store/actions.js
-
-verifySeedPhrase -> submitRequestToBackground verifySeedPhrase
-
-ui/store/action-queue/index.ts
-
-submitRequestToBackground generateActionId
-
-app/scripts/metamask-controller.js
-
-createNewVaultAndKeychain -> keyringController.createNewVaultAndKeychain ->
-
-@metamask/eth-keyring-controller
-
-KeyringController -> persistAllKeyrings -> this.memStore.updateState ->
-
-app/scripts/metamask-controller.js
-
-this.keyringController.memStore.subscribe -> \_onKeyringControllerUpdate
-
-background.js
-
-initState -> loadStateFromPersistence
-
-#### unlock
-
-ui/pages/unlock-page/unlock-page.container.js
-tryUnlockMetamask(password)
-
-ui/store/actions.ts
-
-tryUnlockMetamask -> showLoadingIndication -> unlockInProgress -> unlockSucceeded -> forceUpdateMetamaskState - hideLoadingIndication
-
-tryUnlockMetamask -> showLoadingIndication -> unlockInProgress -> unlockFailed -> hideLoadingIndication
-
-app/scripts/metamask-controller.js
-
-submitPassword(password)
-
-#### store
-
-app/scripts/background.js
-
-app/scripts/lib/local-store.js
-
-app/scripts/migrations/005.js
-
 ## Errors
 
-#### Refused to compile or instantiate WebAssembly module because neither 'wasm-eval' nor 'unsafe-eval' is an allowed source of script in the following Content Security Policy directive: "script-src 'self'"
+#### 1. Refused to compile or instantiate WebAssembly module because neither 'wasm-eval' nor 'unsafe-eval' is an allowed source of script in the following Content Security Policy directive: "script-src 'self'"
 
 manifest.json 新增 content_security_policy
 
@@ -280,7 +387,7 @@ manifest.json 新增 content_security_policy
 }
 ```
 
-#### Buffer is not defined && Process is not defined
+#### 2. Buffer is not defined && Process is not defined
 
 package.json 安装 buffer 和 process
 
@@ -304,7 +411,7 @@ webpack 新增 ProvidePlugin 配置
 
 ```
 
-#### Service worker window.crypto is not defined
+#### 3. Service worker window.crypto is not defined
 
 1. 下载 @metamask/browser-passworder 源码，并且移除源码中的 window。
 
