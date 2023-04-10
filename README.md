@@ -52,6 +52,8 @@ outStream.on(
 
 4. createMetaRPCHandler.js 中，每当执行控制器方法的时候，如果方法名不是 getState，就会获取控制器状态，并保存到 localStore 中。
 
+> keyringController.store.getState() 为私钥数据。
+
 ```js
 try {
   result = await api[data.method](...data.params);
