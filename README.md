@@ -2,6 +2,25 @@
 
 [下载地址](https://github.com/milhous/react-chrome-extension/releases/tag/1.0.0)
 
+## Chrome Extension Roadmap
+
+- ✅ Supported
+
+- 🏗️ Work in Progress
+
+| Feature    | Supported |
+| ---------- | :-------: |
+| 脚手架     |    ✅     |
+| 热更新     |    🏗️     |
+| 多语言     |    🏗️     |
+| 创建账户   |    🏗️     |
+| 导入账户   |    🏗️     |
+| 删除账户   |    🏗️     |
+| 注销       |    ✅     |
+| 解锁       |    ✅     |
+| 区块链切换 |    🏗️     |
+| 侧栏       |    🏗️     |
+
 ## Metamask 私钥相关
 
 #### 主要 Package

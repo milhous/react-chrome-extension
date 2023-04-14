@@ -24,6 +24,16 @@ const openMetamaskTabsIDs = {};
  */
 let appState: IAppState = initialState;
 
+const onStoreUpdate = () => {
+  if (localStore.isSupported) {
+    const state = keyringMananger.getState();
+
+    localStore.set(state);
+  }
+
+  console.log('keyringMananger update');
+};
+
 // 初始化
 async function initialize() {
   const store = (await localStore.get()) as any;
@@ -33,6 +43,8 @@ async function initialize() {
     initState,
     encryptor: encryptorUtils,
   });
+
+  keyringMananger.on('update', onStoreUpdate);
 
   const isInitialized = keyringMananger.isInitialized();
 
@@ -184,6 +196,8 @@ function connectRemote(remotePort: Runtime.Port) {
 
       event.off('update', onUpdate);
 
+      keyringMananger.off('update', onStoreUpdate);
+
       console.log(processName, 'is closed');
     });
   }
@@ -197,6 +211,8 @@ function connectRemote(remotePort: Runtime.Port) {
       isClientOpen = false;
 
       event.off('update', onUpdate);
+
+      keyringMananger.off('update', onStoreUpdate);
 
       console.log(processName, 'is closed');
     });
@@ -218,19 +234,6 @@ browser.runtime.onConnect.addListener(async remotePort => {
 
 // On first install, open a new tab with MetaMask
 browser.runtime.onInstalled.addListener(({reason}) => {
-  if (reason === 'install' || reason === 'update') {
-    initialize();
-
-    keyringMananger.on('update', () => {
-      if (localStore.isSupported) {
-        const state = keyringMananger.getState();
-
-        localStore.set(state);
-      }
-
-      console.log('keyringMananger update');
-    });
-  }
   console.log('browser.runtime.onInstalled', reason, appState);
 });
 
