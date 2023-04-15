@@ -2,6 +2,8 @@
 
 [下载地址](https://github.com/milhous/react-chrome-extension/releases/tag/1.0.0)
 
+[小白学 Extensions - 使用 React 创建 Chrome Extension](https://www.milhous.me/blog/c9500b18-2f22-542a-9c15-a97a049e3b7c/)
+
 ## Chrome Extension Roadmap
 
 - ✅ Supported
