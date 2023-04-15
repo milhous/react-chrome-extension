@@ -26,8 +26,10 @@
       "@ui/*": ["app/ui/*"],
       "@widget/*": ["app/widget/*"]
     },
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["**/*.ts", "**/*.tsx", "webpack/public/index.js"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

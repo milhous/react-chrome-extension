@@ -36,7 +36,8 @@ export default async () => {
     filesConfig,
     scrpitsConfig,
     pluginsConfig,
-    devConfig.isDev ? developmentConfig : productionConfig,
+    devConfig.isDev ? developmentConfig : {},
+    productionConfig,
   );
 
   return config;

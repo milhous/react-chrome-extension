@@ -15,17 +15,27 @@ export default function common(devConfig, basicConfig) {
   // let filename = 'static/js/[name].[fullhash:8].js';
   let devtool = false;
   let filename = 'static/js/[name].js';
-  let chunkFilename = 'static/js/[name].[contenthash:8].js';
   let assetModuleFilename = 'static/assets/[name].[contenthash:8][ext][query]';
+  let publicPath = devConfig.publicPath;
+  let entry = basicConfig.pages.reduce((e, p) => ({...e, [p]: `${basicConfig.src}/${p}/index`}), {});
 
   if (devConfig.isDev) {
-    devtool = 'source-map';
+    devtool = 'cheap-module-source-map';
     filename = 'static/js/[name].js';
-    chunkFilename = 'static/js/[name].chunk.js';
     assetModuleFilename = 'static/assets/[name].[ext][query]';
-  }
 
-  const entry = basicConfig.pages.reduce((e, p) => ({...e, [p]: `${basicConfig.src}/${p}/index`}), {});
+    // 解决热更新报错, publicPath 改为 '/'
+    publicPath = '/';
+
+    for (var entryName in entry) {
+      if (devConfig.notHotReload.indexOf(entryName) === -1) {
+        entry[entryName] = [
+          'webpack/hot/dev-server',
+          `webpack-dev-server/client?hot=true&hostname=localhost&port=${basicConfig.port}`,
+        ].concat(entry[entryName]);
+      }
+    }
+  }
 
   return {
     // 解决 HMR for federated modules ChunkLoadError: Loading hot update chunk
@@ -37,9 +47,8 @@ export default function common(devConfig, basicConfig) {
       path: basicConfig.dist,
       uniqueName: basicConfig.name,
       filename,
-      chunkFilename,
       assetModuleFilename,
-      publicPath: devConfig.publicPath,
+      publicPath,
       environment: {
         arrowFunction: false,
         bigIntLiteral: false,
@@ -49,9 +58,6 @@ export default function common(devConfig, basicConfig) {
         dynamicImport: false,
         module: false,
       },
-      // 防止window is undefined的错误.
-      globalObject: 'this',
-      pathinfo: false, //在打包数千个模块的项目中，这会导致造成垃圾回收性能压力
       clean: true,
     },
     // cache: {
@@ -70,22 +76,7 @@ export default function common(devConfig, basicConfig) {
     },
     resolve: {
       modules: ['node_modules'],
-      extensions: [
-        '.js',
-        '.jsx',
-        '.mjs',
-        '.ts',
-        '.tsx',
-        '.css',
-        '.less',
-        '.scss',
-        '.sass',
-        '.json',
-        '.wasm',
-        '.vue',
-        '.svg',
-        '.svga',
-      ],
+      extensions: ['.js', '.jsx', '.mjs', '.ts', '.tsx', '.css', '.scss', '.sass', '.json', '.wasm', '.svg', '.svga'],
       alias: {
         '@assets': resolvePath('./app/assets'),
         '@store': resolvePath('./app/store'),

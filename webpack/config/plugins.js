@@ -32,6 +32,7 @@ export default function plugins(devConfig, basicConfig) {
       process: 'process/browser',
       Buffer: ['buffer', 'Buffer'],
     }),
+    new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [
         {
@@ -50,21 +51,12 @@ export default function plugins(devConfig, basicConfig) {
           },
           noErrorOnMissing: true,
         },
-        // {
-        //   from: 'node_modules/webextension-polyfill/dist/browser-polyfill.min.js',
-        //   to: './static/js/webextension-polyfill.js',
-        // },
-        // {
-        //   from: 'node_modules/extension-port-stream/dist/index.js',
-        //   to: './static/js/extension-port-stream.js',
-        // },
         {
           from: 'public/app.js',
         },
       ],
     }),
     new ForkTsCheckerWebpackPlugin({
-      async: devConfig.isDev, // true dev环境下部分错误验证通过
       typescript: {
         configFile,
         profile: false,
@@ -101,13 +93,14 @@ export default function plugins(devConfig, basicConfig) {
       page =>
         new HtmlWebpackPlugin({
           // 不自动注入 chunks
-          inject: false,
+          // inject: false,
           template: basicConfig.public + '/index.html',
           favicon: basicConfig.public + '/favicon.ico',
           // 生成的 html 文件名
           filename: `${page}/index.html`,
           // 引用入口文件定义的 chunks
           chunks: [page],
+          cache: false,
         }),
     ),
   ];
@@ -120,8 +113,6 @@ export default function plugins(devConfig, basicConfig) {
       }),
     );
   } else {
-    plugins.push(new CleanWebpackPlugin());
-
     plugins.push(
       new MiniCssExtractPlugin({
         ignoreOrder: true,
