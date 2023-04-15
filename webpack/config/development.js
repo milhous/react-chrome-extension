@@ -6,24 +6,33 @@
 export default function development(port, dist) {
   return {
     devServer: {
-      static: dist,
+      https: false,
+      static: {
+        directory: dist,
+      },
       // 解决 HMR for federated modules ChunkLoadError: Loading hot update chunk
-      liveReload: false,
       hot: true,
+      liveReload: false,
       host: 'localhost',
       port,
       compress: true,
       historyApiFallback: true,
       open: false,
-      allowedHosts: ['all'],
+      allowedHosts: 'all',
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
         'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
       },
-      client: {
-        overlay: true,
+      devMiddleware: {
+        publicPath: `http://localhost:${port}/`,
+        writeToDisk: true,
       },
+      client: {
+        // webSocketTransport: 'sockjs',
+        overlay: false,
+      },
+      // webSocketServer: 'sockjs',
     },
   };
 }

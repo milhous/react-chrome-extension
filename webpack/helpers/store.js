@@ -20,6 +20,8 @@ class Store {
   _browserslist = packageJson.browserslist.production;
   // 公共路径
   _publicPath = 'auto';
+  // 无需热更新的页面
+  _notHotReload = [];
 
   // 应用名称
   _appName = 'Milhous';
@@ -74,14 +76,22 @@ class Store {
       isDev: this._isDev,
       browserslist: this._browserslist,
       publicPath: this._publicPath,
+      notHotReload: this._notHotReload,
     };
   }
 
-  // 初始化
-  init(env, mode, pages, analyze) {
+  /**
+   * 初始化
+   * @param {string} env 环境
+   * @param {string} mode 模式
+   * @param {Array<string>} pages 页面
+   * @param {boolean} analyze 是否分析
+   * @param {Array<string>} notHotReload 不需要热更新的页面
+   */
+  init({env, mode, pages, analyze, notHotReload}) {
     this._setAppConfig(pages);
 
-    this._setDevConfig(env, mode, analyze);
+    this._setDevConfig({env, mode, analyze, notHotReload});
   }
 
   /**
@@ -89,11 +99,13 @@ class Store {
    * @param {string} env 环境变量
    * @param {string} mode 构建模式
    * @param {boolean} analyze 生成分析报告
+   * @param {Array<string>} notHotReload 不需要热更新的页面
    */
-  _setDevConfig(env, mode, analyze = false) {
+  _setDevConfig({env, mode, analyze = false, notHotReload = []}) {
     this._env = env;
     this._mode = mode;
     this._analyze = analyze;
+    this._notHotReload = notHotReload;
     this._isDev = mode === ModeType.DEVELOPMENT;
 
     if (this._isDev) {

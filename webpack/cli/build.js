@@ -6,7 +6,11 @@ import getWebpackConfig from '../config/index.js';
 
 // 启动
 async function runServer() {
-  store.init('prod', 'production', ['popup', 'home', 'background']);
+  store.init({
+    env: 'prod',
+    mode: 'production',
+    pages: ['popup', 'home', 'background'],
+  });
 
   const webpackConfig = await getWebpackConfig();
 
