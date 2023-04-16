@@ -50,10 +50,9 @@ async function initialize() {
 
   appState = {
     ...appState,
+    isLaunch: true,
     isInitialized,
   };
-
-  console.log('store', store, keyringMananger.isInitialized());
 }
 
 /**

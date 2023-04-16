@@ -2,13 +2,15 @@ import {useSelector} from 'react-redux';
 
 import Assets from '@assets/index';
 import {IAppStoreState, IAppState} from '@store/types';
+import WidgetSpinner from '@widget/spinner';
 
+import Loading from './components/Loading';
 import Unlock from './components/Unlock';
 import CreateAccount from './components/CreateAccount';
 
 export default function PageWelcome() {
-  const {isInitialized, isUnlocked} = useSelector<IAppStoreState>(state => {
-    return {isInitialized: state.app.isInitialized, isUnlocked: state.app.isUnlocked};
+  const {isLaunch, isInitialized} = useSelector<IAppStoreState>(state => {
+    return {isLaunch: state.app.isLaunch, isInitialized: state.app.isInitialized};
   }) as Partial<IAppState>;
 
   return (
@@ -22,8 +24,9 @@ export default function PageWelcome() {
         </dt>
         <dd className="mt-2.5 px-[48px] text-[15px] leading-6 text-dark-gray">管理您的所有加密资产！它简单易操作！</dd>
       </dl>
-      {isInitialized && <Unlock />}
-      {!isInitialized && <CreateAccount />}
+      {!isLaunch && <Loading />}
+      {isLaunch && isInitialized && <Unlock />}
+      {isLaunch && !isInitialized && <CreateAccount />}
       {/* <span className="mt-4 cursor-pointer text-dark-gray">忘记密码了？</span> */}
     </section>
   );

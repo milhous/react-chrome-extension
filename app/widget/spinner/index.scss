@@ -1,0 +1,77 @@
+.widget-spinner {
+  @keyframes animRotate {
+    0%,
+    50% {
+      transform: rotateZ(0deg);
+    }
+    100% {
+      transform: rotateZ(-180deg);
+    }
+  }
+
+  @keyframes animEmpty {
+    0% {
+      clip-path: polygon(18% 20%, 50% 100%, 82% 20%);
+    }
+    50%,
+    100% {
+      clip-path: polygon(50% 100%, 50% 100%, 50% 100%);
+    }
+  }
+
+  @keyframes animFull {
+    0% {
+      clip-path: polygon(18% 80%, 50% 80%, 82% 80%);
+    }
+    50%,
+    100% {
+      clip-path: polygon(18% 80%, 50% 0, 82% 80%);
+    }
+  }
+
+  @apply relative w-10 text-midnight-blue;
+
+  animation: animRotate 1s infinite ease;
+
+  &::before,
+  &::after {
+    @apply absolute hidden left-1/2 top-1/2 w-0 h-0 border-solid border-transparent border-t-primary-blue;
+
+    content: "";
+    border-width: 3vw 1.6vw 0 1.6vw;
+  }
+
+  i {
+    @apply box-border overflow-hidden absolute w-full h-1/2;
+
+    &:before {
+      @apply block w-full h-full bg-primary-blue;
+
+      content: "";
+    }
+  }
+
+  svg {
+    @apply w-full;
+  }
+
+  &_top {
+    @apply top-0;
+
+    &:before {
+      clip-path: polygon(18% 20%, 50% 100%, 82% 20%);
+
+      animation: animEmpty 1s infinite ease;
+    }
+  }
+
+  &_bottom {
+    @apply bottom-0;
+
+    &:before {
+      clip-path: polygon(18% 80%, 50% 0, 82% 80%);
+
+      animation: animFull 1s infinite ease;
+    }
+  }
+}

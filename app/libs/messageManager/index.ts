@@ -55,7 +55,7 @@ class MessageManager {
       return;
     }
 
-    console.log(`${this._portname} sendMessage`, msg);
+    console.log(`client ${this._portname} sendMessage`, msg);
 
     this._port.postMessage(msg);
   }

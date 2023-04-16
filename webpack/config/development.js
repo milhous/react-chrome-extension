@@ -29,10 +29,10 @@ export default function development(port, dist) {
         writeToDisk: true,
       },
       client: {
-        // webSocketTransport: 'sockjs',
+        webSocketTransport: 'sockjs',
         overlay: false,
       },
-      // webSocketServer: 'sockjs',
+      webSocketServer: 'sockjs',
     },
   };
 }
