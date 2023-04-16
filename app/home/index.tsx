@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client';
-import {MemoryRouter} from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 
 import {ENVIRONMENT_TYPE, MESSAGE_TYPE} from '@libs/constants/app';
 import messageManager from '@libs/messageManager';
@@ -19,9 +19,9 @@ messageManager.init(ENVIRONMENT_TYPE.FULLSCREEN, msg => {
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
-  <MemoryRouter initialEntries={['/home']}>
+  <BrowserRouter basename="home">
     <main className="app-home relative h-full w-full overflow-auto">
       <App envType={ENVIRONMENT_TYPE.FULLSCREEN} />
     </main>
-  </MemoryRouter>,
+  </BrowserRouter>,
 );

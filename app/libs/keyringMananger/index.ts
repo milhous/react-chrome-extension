@@ -415,8 +415,6 @@ class KeyringMananger extends EventEmitter {
 
     this.emit('update');
 
-    console.log('subscribe state', state);
-
     // if (!addresses.length) {
     //   return;
     // }
@@ -438,8 +436,6 @@ class KeyringMananger extends EventEmitter {
     // KeyringController event. Other controllers subscribe to the 'lock'
     // event of the MetaMaskController itself.
     this.emit('lock');
-
-    console.log('lock');
   }
 
   private _onUnlock() {
@@ -459,8 +455,6 @@ class KeyringMananger extends EventEmitter {
     // KeyringController event. Other controllers subscribe to the 'unlock'
     // event of the MetaMaskController itself.
     this.emit('unlock');
-
-    console.log('unlock');
   }
 }
 
