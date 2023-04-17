@@ -22,17 +22,25 @@ export default function PageLoading() {
   const isPopup = env === ENVIRONMENT_TYPE[ENVIRONMENT_TYPE.POPUP];
 
   useEffect(() => {
+    let to = '';
+
     if (isLaunch) {
       if (isFirstTime) {
-        navigate(ROUTES.ONBOARDING);
+        to = ROUTES.ONBOARDING;
       } else {
         if (isUnlocked) {
-          navigate(ROUTES.WALLET);
+          to = ROUTES.WALLET;
         } else {
-          navigate(ROUTES.WELCOME);
+          to = ROUTES.WELCOME;
         }
       }
     }
+
+    if (to !== '') {
+      navigate(to);
+    }
+
+    console.log('page loading');
   }, [isLaunch, isFirstTime, isUnlocked]);
 
   return (
