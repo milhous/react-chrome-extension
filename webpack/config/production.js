@@ -35,8 +35,8 @@ export default function minimizer() {
   return {
     performance: {
       hints: 'warning',
-      maxEntrypointSize: 512000,
-      maxAssetSize: 614400,
+      maxEntrypointSize: 4_096_000,
+      maxAssetSize: 4_096_000,
     },
     optimization: {
       chunkIds: 'deterministic', // deterministic 在不同的编译中不变的短数字 id。有益于长期缓存。在生产模式中会默认开启。

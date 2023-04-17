@@ -5,7 +5,6 @@ import {ENVIRONMENT_TYPE, MESSAGE_TYPE} from '@libs/constants/app';
 import messageManager from '@libs/messageManager';
 import store from '@store/index';
 import {update} from '@store/reducer';
-import WidgetMaximize from '@widget/maximize';
 
 import App from '../App';
 
@@ -21,7 +20,6 @@ root.render(
   <MemoryRouter initialEntries={['/popup']}>
     <main className="app-popup relative h-[600px] w-[375px] overflow-auto">
       <App envType={ENVIRONMENT_TYPE.POPUP} />
-      <WidgetMaximize />
     </main>
   </MemoryRouter>,
 );

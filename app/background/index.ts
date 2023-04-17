@@ -28,16 +28,18 @@ const onStoreUpdate = () => {
   if (localStore.isSupported) {
     const state = keyringMananger.getState();
 
-    localStore.set(state);
+    localStore.set({keyrings: state});
   }
 
   console.log('keyringMananger update');
 };
 
 // 初始化
-async function initialize() {
+async function initialize(remotePort: Runtime.Port) {
   const store = (await localStore.get()) as any;
-  const initState = !!store && store.hasOwnProperty('data') ? store.data : {};
+  const initState = !!store && store.hasOwnProperty('keyrings') ? store.keyrings : {};
+
+  console.log('initialize', store);
 
   keyringMananger.init({
     initState,
@@ -47,13 +49,24 @@ async function initialize() {
   keyringMananger.on('update', onStoreUpdate);
 
   const isInitialized = keyringMananger.isInitialized();
+  const isFirstTime = !!store && store.hasOwnProperty('isFirstTime') ? store.isFirstTime : true;
 
   appState = {
     ...appState,
+    isLaunch: true,
+    isFirstTime,
     isInitialized,
+    env: remotePort.name,
   };
+}
 
-  console.log('store', store, keyringMananger.isInitialized());
+// 开始完成
+async function onboardingComplete() {
+  await localStore.set({isFirstTime: false});
+
+  return {
+    isFirstTime: false,
+  };
 }
 
 /**
@@ -149,6 +162,16 @@ function connectRemote(remotePort: Runtime.Port) {
       remotePort.postMessage({type: MESSAGE_TYPE.ACK_KEEP_ALIVE_MESSAGE});
     } else {
       switch (msg.type) {
+        case MESSAGE_TYPE.ONBOARDING_COMPLETE: {
+          const state = await onboardingComplete();
+
+          appState = {
+            ...appState,
+            ...state,
+          };
+
+          break;
+        }
         case MESSAGE_TYPE.CREATE_ACCOUNT: {
           const state = await createAccount(msg.payload.password);
 
@@ -225,7 +248,7 @@ browser.runtime.onConnect.addListener(async remotePort => {
   // Queue up connection attempts here, waiting until after initialization
   // await isInitialized;
   // This is set in `setupController`, which is called as part of initialization
-  await initialize();
+  await initialize(remotePort);
 
   connectRemote(remotePort);
 

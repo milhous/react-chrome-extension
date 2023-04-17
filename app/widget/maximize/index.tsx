@@ -15,7 +15,7 @@ export default function WidgetMaximize() {
   };
 
   return (
-    <button className="absolute right-[15px] top-[15px]" onClick={handleMaximize}>
+    <button className="widget-maximize absolute right-[15px] top-[15px]" onClick={handleMaximize}>
       <Assets.IconMaximize className="text-primary-blue" />
     </button>
   );

@@ -1,15 +1,19 @@
 import {useSelector} from 'react-redux';
 
 import Assets from '@assets/index';
+import {ENVIRONMENT_TYPE} from '@libs/constants/app';
 import {IAppStoreState, IAppState} from '@store/types';
+
+import WidgetMaximize from '@widget/maximize';
 
 import Unlock from './components/Unlock';
 import CreateAccount from './components/CreateAccount';
 
 export default function PageWelcome() {
-  const {isInitialized, isUnlocked} = useSelector<IAppStoreState>(state => {
-    return {isInitialized: state.app.isInitialized, isUnlocked: state.app.isUnlocked};
+  const {isInitialized, env} = useSelector<IAppStoreState>(state => {
+    return {isInitialized: state.app.isInitialized, env: state.app.env};
   }) as Partial<IAppState>;
+  const isPopup = env === ENVIRONMENT_TYPE[ENVIRONMENT_TYPE.POPUP];
 
   return (
     <section className="app-page app-page_welcome flex flex-col items-center pt-[50px]">
@@ -24,6 +28,7 @@ export default function PageWelcome() {
       </dl>
       {isInitialized && <Unlock />}
       {!isInitialized && <CreateAccount />}
+      {isPopup && <WidgetMaximize />}
       {/* <span className="mt-4 cursor-pointer text-dark-gray">忘记密码了？</span> */}
     </section>
   );

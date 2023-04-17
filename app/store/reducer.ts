@@ -3,8 +3,11 @@ import {IAppState} from './types';
 
 // 初始化状态
 export const initialState: IAppState = {
+  isLaunch: false,
+  isFirstTime: false,
   isInitialized: false,
   isUnlocked: false,
+  env: '',
   address: '',
   mnemonicWords: '',
   privateKey: '',

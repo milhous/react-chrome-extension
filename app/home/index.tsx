@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client';
-import {MemoryRouter} from 'react-router-dom';
+import {BrowserRouter, MemoryRouter} from 'react-router-dom';
 
 import {ENVIRONMENT_TYPE, MESSAGE_TYPE} from '@libs/constants/app';
 import messageManager from '@libs/messageManager';
