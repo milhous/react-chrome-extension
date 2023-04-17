@@ -28,7 +28,7 @@ const onStoreUpdate = () => {
   if (localStore.isSupported) {
     const state = keyringMananger.getState();
 
-    localStore.set(state);
+    localStore.set({keyrings: state});
   }
 
   console.log('keyringMananger update');
@@ -37,7 +37,7 @@ const onStoreUpdate = () => {
 // 初始化
 async function initialize(remotePort: Runtime.Port) {
   const store = (await localStore.get()) as any;
-  const initState = !!store && store.hasOwnProperty('data') ? store.data : {};
+  const initState = !!store && store.hasOwnProperty('keyrings') ? store.keyrings : {};
 
   console.log('initialize', store);
 
@@ -49,7 +49,7 @@ async function initialize(remotePort: Runtime.Port) {
   keyringMananger.on('update', onStoreUpdate);
 
   const isInitialized = keyringMananger.isInitialized();
-  const isFirstTime = initState.hasOwnProperty('isFirstTime') ? initState.isFirstTime : true;
+  const isFirstTime = !!store && store.hasOwnProperty('isFirstTime') ? store.isFirstTime : true;
 
   appState = {
     ...appState,
