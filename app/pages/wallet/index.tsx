@@ -8,6 +8,7 @@ import {MESSAGE_TYPE} from '@libs/constants/app';
 import ROUTES from '@libs/constants/routes';
 import messageManager from '@libs/messageManager';
 import {IAppStoreState, IAppState} from '@store/types';
+import UIHeader from '@ui/header';
 
 import './index.scss';
 
@@ -45,15 +46,11 @@ export default function PageWallet() {
   }) as Partial<IAppState>;
   const [qrcode, setQrcode] = useState<string>('');
 
-  const handleLogout = () => {
-    messageManager.sendMessage({
-      type: MESSAGE_TYPE.LOCK,
-    });
-  };
-
   useEffect(() => {
     if (!isUnlocked) {
-      navigate(ROUTES.WELCOME);
+      navigate(ROUTES.WELCOME, {
+        replace: true,
+      });
     }
   }, [isUnlocked]);
 
@@ -67,6 +64,7 @@ export default function PageWallet() {
 
   return (
     <section className="app-page page-wallet">
+      <UIHeader />
       <div className="app-section">
         <div className="page-wallet_card box-border space-y-4 rounded-3xl bg-white p-6 shadow">
           <WalletItem title="地址" desc={address} />
@@ -75,9 +73,6 @@ export default function PageWallet() {
           </div>
           <WalletItem title="助记词" desc={mnemonicWords} />
           <WalletItem title="私钥" desc={privateKey} />
-          <button className="app-btn_outline !mt-[20px]" onClick={handleLogout}>
-            注销
-          </button>
         </div>
       </div>
     </section>

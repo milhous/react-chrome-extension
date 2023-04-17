@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --animation-duration: 0.3s;
+}
+
 body {
   background-color: #edf1f9;
 }

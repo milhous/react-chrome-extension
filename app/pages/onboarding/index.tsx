@@ -70,7 +70,9 @@ export default function PageOnboarding() {
 
   useEffect(() => {
     if (!isOnboarding) {
-      navigate(ROUTES.WELCOME);
+      navigate(ROUTES.WELCOME, {
+        replace: true,
+      });
     }
   }, [isOnboarding]);
 

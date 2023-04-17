@@ -9,6 +9,7 @@ import PageLoading from '@pages/loading';
 import PageOnboarding from '@pages/onboarding';
 import PageWelcome from '@pages/welcome';
 import PageWallet from '@pages/wallet';
+import PageSettings from '@pages/settings';
 
 import {AppProvider} from '@store/Provider';
 
@@ -29,6 +30,7 @@ function App(props: {envType: number}) {
               <Route path={ROUTES.ONBOARDING} element={<PageOnboarding />} />
               <Route path={ROUTES.WELCOME} element={<PageWelcome />} />
               <Route path={ROUTES.WALLET} element={<PageWallet />} />
+              <Route path={ROUTES.SETTINGS} element={<PageSettings />} />
               <Route path="*" element={<Navigate replace to="/" />} />
             </Routes>
           </Suspense>

@@ -11,7 +11,11 @@ export default function WidgetMaximize() {
   const handleMaximize = evt => {
     evt.preventDefault();
 
-    getEnvironmentType() === ENVIRONMENT_TYPE.POPUP ? extension.openExtensionInBrowser('') : navigate('/home');
+    getEnvironmentType() === ENVIRONMENT_TYPE.POPUP
+      ? extension.openExtensionInBrowser('')
+      : navigate('/home', {
+          replace: true,
+        });
   };
 
   return (

@@ -62,7 +62,9 @@ export default function Unlock() {
 
   useEffect(() => {
     if (isUnlocked) {
-      navigate(ROUTES.WALLET);
+      navigate(ROUTES.WALLET, {
+        replace: true,
+      });
     }
   }, [isUnlocked]);
 

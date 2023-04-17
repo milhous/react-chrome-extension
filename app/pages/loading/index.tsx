@@ -37,7 +37,9 @@ export default function PageLoading() {
     }
 
     if (to !== '') {
-      navigate(to);
+      navigate(to, {
+        replace: true,
+      });
     }
   }, [isLaunch, isOnboarding, isUnlocked]);
 

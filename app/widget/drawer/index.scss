@@ -1,0 +1,188 @@
+.widget-drawer {
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes anchorLeftIn {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes anchorLeftOut {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes anchorRightIn {
+    0% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes anchorRightOut {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes anchorTopIn {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes anchorTopOut {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes anchorBottomIn {
+    0% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes anchorBottomOut {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+  }
+
+  @apply fixed inset-0 z-50;
+
+  &.in {
+    @apply block;
+  }
+
+  &.out {
+    @apply hidden;
+  }
+
+  &.in &_mask {
+    animation: fadeIn var(--animation-duration) both;
+  }
+
+  &.ing &_mask {
+    animation: fadeOut var(--animation-duration) both;
+  }
+
+  &.in.left &_content {
+    animation-name: anchorLeftIn;
+  }
+
+  &.ing.left &_content {
+    animation-name: anchorLeftOut;
+  }
+
+  &.in.right &_content {
+    animation-name: anchorRightIn;
+  }
+
+  &.ing.right &_content {
+    animation-name: anchorRightOut;
+  }
+
+  &.in.top &_content {
+    animation-name: anchorTopIn;
+  }
+
+  &.ing.top &_content {
+    animation-name: anchorTopOut;
+  }
+
+  &.in.bottom &_content {
+    animation-name: anchorBottomIn;
+  }
+
+  &.ing.bottom &_content {
+    animation-name: anchorBottomOut;
+  }
+
+  &_mask {
+    @apply h-full w-full bg-black/20 backdrop-blur-sm;
+  }
+
+  &_content {
+    @apply absolute box-border bg-white p-6 shadow-lg;
+
+    animation-duration: var(--animation-duration);
+    animation-fill-mode: both;
+  }
+
+  &.left &_content {
+    @apply inset-y-0 left-0 w-3/5 sm:w-1/2 max-w-xs rounded-r-2xl;
+  }
+
+  &.right &_content {
+    @apply inset-y-0 right-0 w-3/5 sm:w-1/2 max-w-xs rounded-l-2xl;
+  }
+
+  &.top &_content {
+    @apply inset-x-0 top-0 h-1/2 max-h-96 rounded-b-2xl;
+  }
+
+  &.bottom &_content {
+    @apply inset-x-0 bottom-0 h-1/2 max-h-96 rounded-t-2xl;
+  }
+
+  &_close {
+    @apply absolute right-[15px] top-[15px] cursor-pointer text-midnight-blue hover:text-primary-blue transition-colors;
+  }
+}
