@@ -4,6 +4,7 @@ import {IAppState} from './types';
 // 初始化状态
 export const initialState: IAppState = {
   isLaunch: false,
+  isOnboarding: false,
   isFirstTime: false,
   isInitialized: false,
   isUnlocked: false,

@@ -32,6 +32,7 @@ export default class ExtensionStore {
 
   constructor() {
     this.isSupported = Boolean(browser.storage.local);
+
     if (!this.isSupported) {
       console.error('Storage local API not available.');
     }

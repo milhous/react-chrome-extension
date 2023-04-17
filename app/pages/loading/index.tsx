@@ -11,10 +11,10 @@ import {IAppStoreState, IAppState} from '@store/types';
 
 export default function PageLoading() {
   const navigate = useNavigate();
-  const {isLaunch, isFirstTime, isUnlocked, env} = useSelector<IAppStoreState>(state => {
+  const {isLaunch, isOnboarding, isUnlocked, env} = useSelector<IAppStoreState>(state => {
     return {
       isLaunch: state.app.isLaunch,
-      isFirstTime: state.app.isFirstTime,
+      isOnboarding: state.app.isOnboarding,
       isUnlocked: state.app.isUnlocked,
       env: state.app.env,
     };
@@ -25,7 +25,7 @@ export default function PageLoading() {
     let to = '';
 
     if (isLaunch) {
-      if (isFirstTime) {
+      if (isOnboarding) {
         to = ROUTES.ONBOARDING;
       } else {
         if (isUnlocked) {
@@ -39,9 +39,7 @@ export default function PageLoading() {
     if (to !== '') {
       navigate(to);
     }
-
-    console.log('page loading');
-  }, [isLaunch, isFirstTime, isUnlocked]);
+  }, [isLaunch, isOnboarding, isUnlocked]);
 
   return (
     <section className="app-page app-page_loading flex flex-col items-center justify-center bg-white">
