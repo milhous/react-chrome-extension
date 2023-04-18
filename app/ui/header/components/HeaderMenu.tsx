@@ -41,6 +41,28 @@ const ExpandView = () => {
   );
 };
 
+/**
+ * 移除账户
+ * @param {string} address 当前账户地址
+ */
+const RemoveAccount = ({address}: {address: string}) => {
+  const handleRemove = () => {
+    messageManager.sendMessage({
+      type: MESSAGE_TYPE.REMOVE_ACCOUNT,
+      payload: {
+        address,
+      },
+    });
+  };
+
+  return (
+    <li onClick={handleRemove}>
+      <Assets.IconTrash />
+      删除账户
+    </li>
+  );
+};
+
 // 注销
 const SignOut = () => {
   const handleLogout = () => {
@@ -110,6 +132,7 @@ export default function HeaderMenu() {
               Profile
             </li>
             {isPopup && <ExpandView />}
+            <RemoveAccount address={address} />
             <li>
               <Link to={ROUTES.SETTINGS}>
                 <Assets.IconSettings />

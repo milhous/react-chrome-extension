@@ -49,6 +49,11 @@ function connectRemote(remotePort: Runtime.Port) {
 
         break;
       }
+      case MESSAGE_TYPE.REMOVE_ACCOUNT: {
+        await appManager.removeAccount(msg.payload.address);
+
+        break;
+      }
       case MESSAGE_TYPE.LOCK: {
         await appManager.lock();
 

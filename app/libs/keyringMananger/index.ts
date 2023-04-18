@@ -25,6 +25,7 @@ interface IKeyringMananger extends EventEmitter {
   verifySeedPhrase(): Promise<number[]>;
   verifyAccounts(createdAccounts: string[], seedPhrase: Buffer): Promise<void>;
   exportAccount(address: string, password: string): Promise<string>;
+  removeAccount(address: string): Promise<string>;
   submitPassword(password: string): Promise<object>;
   isUnlocked(): boolean;
   setLocked(): Promise<void>;
@@ -292,6 +293,32 @@ class KeyringMananger extends EventEmitter {
   }
 
   /**
+   * Removes an account from state / storage.
+   *
+   * @param {string} address - A hex address
+   */
+  async removeAccount(address: string): Promise<string> {
+    // Remove all associated permissions
+    // this.removeAllAccountPermissions(address);
+    // Remove account from the preferences controller
+    // this.preferencesController.removeAddress(address);
+    // Remove account from the account tracker controller
+    // this.accountTracker.removeAccount([address]);
+
+    const keyring = await this._keyringController.getKeyringForAccount(address);
+    // Remove account from the keyring
+    await this._keyringController.removeAccount(address);
+
+    const updatedKeyringAccounts = keyring ? await keyring.getAccounts() : {};
+
+    if (updatedKeyringAccounts?.length === 0) {
+      keyring.destroy?.();
+    }
+
+    return address;
+  }
+
+  /**
    * Submits the user's password and attempts to unlock the vault.
    * Also synchronizes the preferencesController, to ensure its schema
    * is up to date with known accounts once the vault is decrypted.
@@ -362,31 +389,36 @@ class KeyringMananger extends EventEmitter {
   public async getAccounts(): Promise<string[]> {
     const accounts = await this._keyringController.getAccounts();
 
-    return accounts;
+    return Array.isArray(accounts) ? accounts : [];
   }
 
   /**
    * Submits a user's encryption key to log the user in via login token
    */
   async submitEncryptionKey() {
-    // try {
-    //   const {loginToken, loginSalt} = await browser.storage.session.get(['loginToken', 'loginSalt']);
-    //   if (loginToken && loginSalt) {
-    //     const {vault} = this.keyringController.store.getState();
-    //     const jsonVault = JSON.parse(vault);
-    //     if (jsonVault.salt !== loginSalt) {
-    //       console.warn('submitEncryptionKey: Stored salt and vault salt do not match');
-    //       await this.clearLoginArtifacts();
-    //       return;
-    //     }
-    //     await this._keyringController.submitEncryptionKey(loginToken, loginSalt);
-    //   }
-    // } catch (e) {
-    //   // If somehow this login token doesn't work properly,
-    //   // remove it and the user will get shown back to the unlock screen
-    //   await this.clearLoginArtifacts();
-    //   throw e;
-    // }
+    try {
+      const {loginToken, loginSalt} = await browser.storage.session.get(['loginToken', 'loginSalt']);
+
+      if (loginToken && loginSalt) {
+        const {vault} = this._keyringController.store.getState();
+        const jsonVault = JSON.parse(vault);
+
+        if (jsonVault.salt !== loginSalt) {
+          console.warn('submitEncryptionKey: Stored salt and vault salt do not match');
+
+          await this.clearLoginArtifacts();
+
+          return;
+        }
+
+        await this._keyringController.submitEncryptionKey(loginToken, loginSalt);
+      }
+    } catch (err) {
+      // If somehow this login token doesn't work properly,
+      // remove it and the user will get shown back to the unlock screen
+      await this.clearLoginArtifacts();
+      throw err;
+    }
   }
 
   async clearLoginArtifacts() {
@@ -410,6 +442,8 @@ class KeyringMananger extends EventEmitter {
     if (this._isManifestV3) {
       await browser.storage.session.set({loginToken, loginSalt});
     }
+
+    console.log('_onKeyringControllerUpdate', state, vault);
 
     this.emit('update');
 

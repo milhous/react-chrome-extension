@@ -10,7 +10,8 @@ import store from './index';
  * @property {boolean} isInitialized 第一个保险库是否已经创建
  * @property {boolean} isUnlocked 保险库当前是否已解密并且账户可供选择
  * @property {string} env 运行环境
- * @property {string} address 保险库当前账户的地址
+ * @property {string} address 当前账户地址
+ * @property {Array<string>} accounts 账户列表
  * @property {string} mnemonicWords 保险库当前账户的助记词
  * @property {string} privateKey 保险库当前账户的私钥
  */
@@ -23,6 +24,7 @@ export interface IAppState {
   isUnlocked: boolean;
   env: string;
   address: string;
+  accounts: string[];
   mnemonicWords: string;
   privateKey: string;
 }

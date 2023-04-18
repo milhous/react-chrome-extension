@@ -12,6 +12,7 @@ import {initialState} from '@store/reducer';
  * @method connectRemote 连接远程
  * @method onboardingComplete 完成培训
  * @method createAccount 创建账号
+ * @method removeAccount 移除账号
  * @method lock 锁定账号
  * @method unlock 解锁账号
  * @method getState 获取状态
@@ -21,6 +22,7 @@ interface IAppManager extends EventEmitter {
   connectRemote(isConnected: boolean): void;
   onboardingComplete(): Promise<void>;
   createAccount(password: string): Promise<void>;
+  removeAccount(address: string): Promise<void>;
   lock(): Promise<void>;
   unlock(password: string): Promise<void>;
   getState(): IAppState;
@@ -65,12 +67,14 @@ class AppManager extends EventEmitter {
 
     const isInitialized = keyringMananger.isInitialized();
     const isOnboarding = !!store && store.hasOwnProperty('isOnboarding') ? store.isOnboarding : true;
+    const accounts = await keyringMananger.getAccounts();
 
     this._updateState({
       isLaunch: true,
       isOnboarding,
       isInitialized,
       env,
+      accounts: ['11'],
     });
   }
 
@@ -102,14 +106,11 @@ class AppManager extends EventEmitter {
 
     const accounts = await keyringMananger.getAccounts();
 
-    if (!Array.isArray(accounts) || accounts.length === 0) {
+    if (accounts.length === 0) {
       return;
     }
 
     const address = accounts[0];
-    const privateKey = await keyringMananger.exportAccount(address, password);
-    const mnemonic = await keyringMananger.verifySeedPhrase();
-    const mnemonicWords = Buffer.from(mnemonic).toString('utf8');
     const isInitialized = keyringMananger.isInitialized();
     const isUnlocked = keyringMananger.isUnlocked();
 
@@ -117,8 +118,25 @@ class AppManager extends EventEmitter {
       isInitialized,
       isUnlocked,
       address,
-      mnemonicWords,
-      privateKey,
+      accounts,
+    });
+  }
+
+  /**
+   * 移除账号
+   * @param {string} address 地址
+   */
+  async removeAccount(address: string): Promise<void> {
+    await keyringMananger.removeAccount(address);
+
+    const accounts = await keyringMananger.getAccounts();
+
+    const isUnlocked = keyringMananger.isUnlocked();
+
+    this._updateState({
+      isUnlocked,
+      address: '',
+      accounts,
     });
   }
 
@@ -126,13 +144,15 @@ class AppManager extends EventEmitter {
   async lock(): Promise<void> {
     await keyringMananger.setLocked();
 
+    const address = '';
     const isUnlocked = keyringMananger.isUnlocked();
+
+    const accounts = await keyringMananger.getAccounts();
 
     this._updateState({
       isUnlocked,
-      address: '',
-      mnemonicWords: '',
-      privateKey: '',
+      address,
+      accounts,
     });
   }
 
@@ -145,22 +165,38 @@ class AppManager extends EventEmitter {
 
     const accounts = await keyringMananger.getAccounts();
 
-    if (!Array.isArray(accounts) || accounts.length === 0) {
+    if (accounts.length === 0) {
       return;
     }
 
     const address = accounts[0];
-    const privateKey = await keyringMananger.exportAccount(address, password);
-    const mnemonic = await keyringMananger.verifySeedPhrase();
-    const mnemonicWords = Buffer.from(mnemonic).toString('utf8');
     const isUnlocked = keyringMananger.isUnlocked();
 
     this._updateState({
       isUnlocked,
       address,
-      mnemonicWords,
-      privateKey,
+      accounts,
     });
+  }
+
+  // 获取助记词
+  async getMnemonicWords(): Promise<string> {
+    const mnemonic = await keyringMananger.verifySeedPhrase();
+    const mnemonicWords = Buffer.from(mnemonic).toString('utf8');
+
+    return mnemonicWords;
+  }
+
+  /**
+   * 获取私钥
+   * @param {string} address 地址
+   * @param {string} password 密码
+   * @returns {string}
+   */
+  async getPrivateKey(address: string, password: string): Promise<string> {
+    const privateKey = await keyringMananger.exportAccount(address, password);
+
+    return privateKey;
   }
 
   /**
@@ -173,9 +209,13 @@ class AppManager extends EventEmitter {
 
   // 更新状态
   private _updateState(state: Partial<IAppState>) {
+    const {mnemonicWords = '', privateKey = ''} = state;
+
     this._state = {
       ...this._state,
       ...state,
+      mnemonicWords,
+      privateKey,
     };
 
     this.emit('update');
