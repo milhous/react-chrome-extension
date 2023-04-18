@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useSelector} from 'react-redux';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import Jazzicon, {jsNumberForAddress} from 'react-jazzicon';
 
 import Assets from '@assets/index';
@@ -18,7 +18,7 @@ const JazzIcon = ({address}: {address: string}) => {
   return (
     <dl className="ui-header-menu_jazzicon">
       <dt>
-        <Jazzicon diameter={68} seed={jsNumberForAddress(address)} />
+        <Jazzicon diameter={60} seed={jsNumberForAddress(address)} />
       </dt>
       <dd>{getThumbAccount(address)}</dd>
     </dl>
@@ -73,7 +73,7 @@ export default function HeaderMenu() {
 
   return (
     <div className="flex items-center justify-center">
-      <button className="cursor-pointer text-midnight-blue hover:text-primary-blue" onClick={() => handleDrawer(true)}>
+      <button className="app-btn_icon" onClick={() => handleDrawer(true)}>
         <Assets.IconAlignRight />
       </button>
       <WidgetDrawer
@@ -85,9 +85,9 @@ export default function HeaderMenu() {
           <JazzIcon address={address} />
           <ul className="h-full">
             <li>
-              <Link to={ROUTES.WALLET}>
+              <Link to={ROUTES.WALLET} replace>
                 <Assets.IconHome />
-                Wallet
+                钱包
               </Link>
             </li>
             <li>

@@ -1,20 +1,19 @@
 import {useEffect, useState} from 'react';
-import {useLocation, useNavigate} from 'react-router-dom';
+import {useNavigate, useMatch} from 'react-router-dom';
 
 import Assets from '@assets/index';
+import ROUTES from '@libs/constants/routes';
 
 // header - menu
 export default function HeaderMenu() {
-  const location = useLocation();
   const navigate = useNavigate();
+  const match = useMatch(ROUTES.WALLET);
 
   const [isBack, setBackState] = useState<boolean>(false);
 
   useEffect(() => {
-    setBackState(!!location.state && !!location.state.from);
-
-    console.log(location);
-  }, [location]);
+    setBackState(!match);
+  }, [match]);
 
   // 显示
   const handleBack = () => {
@@ -23,11 +22,11 @@ export default function HeaderMenu() {
 
   if (isBack) {
     return (
-      <button onClick={handleBack}>
+      <button className="app-btn_icon" onClick={handleBack}>
         <Assets.IconChevronLeft />
       </button>
     );
   } else {
-    return <div></div>;
+    return <img className="aspect-square w-[30px]" src={Assets.IconLogo} />;
   }
 }

@@ -39,6 +39,10 @@ body {
 
       @extend .app-btn;
     }
+
+    &_icon {
+      @apply cursor-pointer text-midnight-blue transition-colors hover:text-primary-blue;
+    }
   }
 
   &-form {
