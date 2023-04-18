@@ -9,6 +9,7 @@ import {initialState} from '@store/reducer';
 /**
  * 声明 - App管理
  * @method init 初始化
+ * @method connectRemote 连接远程
  * @method onboardingComplete 完成培训
  * @method createAccount 创建账号
  * @method lock 锁定账号
@@ -17,6 +18,7 @@ import {initialState} from '@store/reducer';
  */
 interface IAppManager extends EventEmitter {
   init(env: string): Promise<void>;
+  connectRemote(isConnected: boolean): void;
   onboardingComplete(): Promise<void>;
   createAccount(password: string): Promise<void>;
   lock(): Promise<void>;
@@ -69,6 +71,16 @@ class AppManager extends EventEmitter {
       isOnboarding,
       isInitialized,
       env,
+    });
+  }
+
+  /**
+   * 连接远程
+   * @param {boolean} isConnected 是否连接
+   */
+  connectRemote(isConnected: boolean): void {
+    this._updateState({
+      isConnected,
     });
   }
 

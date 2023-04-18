@@ -33,30 +33,31 @@ function connectRemote(remotePort: Runtime.Port) {
   remotePort.onMessage.addListener(async msg => {
     console.log('background receive msg', msg);
 
-    if (msg.type === MESSAGE_TYPE.WORKER_KEEP_ALIVE_MESSAGE) {
-      remotePort.postMessage({type: MESSAGE_TYPE.ACK_KEEP_ALIVE_MESSAGE});
-    } else {
-      switch (msg.type) {
-        case MESSAGE_TYPE.ONBOARDING_COMPLETE: {
-          await appManager.onboardingComplete();
+    switch (msg.type) {
+      case MESSAGE_TYPE.WORKER_KEEP_ALIVE_MESSAGE:
+        appManager.connectRemote(true);
 
-          break;
-        }
-        case MESSAGE_TYPE.CREATE_ACCOUNT: {
-          await appManager.createAccount(msg.payload.password);
+        break;
 
-          break;
-        }
-        case MESSAGE_TYPE.LOCK: {
-          await appManager.lock();
+      case MESSAGE_TYPE.ONBOARDING_COMPLETE: {
+        await appManager.onboardingComplete();
 
-          break;
-        }
-        case MESSAGE_TYPE.UNLOCK: {
-          await appManager.unlock(msg.payload.password);
+        break;
+      }
+      case MESSAGE_TYPE.CREATE_ACCOUNT: {
+        await appManager.createAccount(msg.payload.password);
 
-          break;
-        }
+        break;
+      }
+      case MESSAGE_TYPE.LOCK: {
+        await appManager.lock();
+
+        break;
+      }
+      case MESSAGE_TYPE.UNLOCK: {
+        await appManager.unlock(msg.payload.password);
+
+        break;
       }
     }
   });
@@ -87,8 +88,6 @@ function connectRemote(remotePort: Runtime.Port) {
       console.log(processName, 'is closed');
     });
   }
-
-  onUpdate();
 }
 
 browser.runtime.onConnect.addListener(async remotePort => {

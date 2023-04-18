@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {useSelector} from 'react-redux';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import Jazzicon, {jsNumberForAddress} from 'react-jazzicon';
 
 import Assets from '@assets/index';

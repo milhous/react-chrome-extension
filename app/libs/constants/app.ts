@@ -1,3 +1,5 @@
+export const WORKER_KEEP_ALIVE_INTERVAL = 1000;
+
 // 环境类型
 export enum ENVIRONMENT_TYPE {
   POPUP = 0,

@@ -26,7 +26,7 @@ export function getThumbAccount(account: string): string {
   let res = '';
 
   if (typeof account === 'string') {
-    res = `${account.slice(0, 2)}...${account.slice(-4)}`;
+    res = `${account.slice(0, 5)}...${account.slice(-4)}`;
   }
 
   return res;

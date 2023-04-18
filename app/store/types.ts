@@ -4,6 +4,7 @@ import store from './index';
 /**
  * 声明 - APP 状态
  * @property {boolean} isLaunch 是否启动
+ * @property {boolean} isConnected 是否通讯已连接
  * @property {boolean} isOnboarding 是否进入培训
  * @property {boolean} isFirstTime 是否首次进入
  * @property {boolean} isInitialized 第一个保险库是否已经创建
@@ -15,6 +16,7 @@ import store from './index';
  */
 export interface IAppState {
   isLaunch: boolean;
+  isConnected: boolean;
   isOnboarding: boolean;
   isFirstTime: boolean;
   isInitialized: boolean;

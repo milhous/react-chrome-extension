@@ -1,25 +1,17 @@
 import {StrictMode, Suspense, useEffect} from 'react';
 import {Route, Routes, Navigate} from 'react-router-dom';
 
-import {MESSAGE_TYPE} from '@libs/constants/app';
 import ROUTES from '@libs/constants/routes';
-import messageManager from '@libs/messageManager';
-
+import {AppProvider} from '@store/Provider';
 import PageLoading from '@pages/loading';
 import PageOnboarding from '@pages/onboarding';
 import PageWelcome from '@pages/welcome';
 import PageWallet from '@pages/wallet';
 import PageSettings from '@pages/settings';
 
-import {AppProvider} from '@store/Provider';
-
 import './App.scss';
 
 function App(props: {envType: number}) {
-  useEffect(() => {
-    messageManager.sendMessage({type: MESSAGE_TYPE.UPDATE_STORE_DATA});
-  }, []);
-
   return (
     <StrictMode>
       <AppProvider>
