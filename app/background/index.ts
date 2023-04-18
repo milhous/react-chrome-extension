@@ -1,141 +1,14 @@
 import browser, {Runtime} from 'webextension-polyfill';
 import PortStream from 'extension-port-stream';
 import endOfStream from 'end-of-stream';
-import EventEmitter from 'events';
 
 import {ENVIRONMENT_TYPE, MESSAGE_TYPE} from '@libs/constants/app';
-import keyringMananger from '@libs/keyringMananger';
-import * as encryptorUtils from '@libs/browserPassworder';
-import LocalStore from '@libs/localStore';
-import {IAppState} from '@store/types';
-import {initialState, update} from '@store/reducer';
-
-const event = new EventEmitter();
-const localStore = new LocalStore();
+import appManager from '@libs/appManager';
 
 let isClientOpen = false;
 let popupIsOpen = false;
 const notificationIsOpen = false;
 const openMetamaskTabsIDs = {};
-
-/**
- * APP 初始状态
- * @type {IAppState}
- */
-let appState: IAppState = initialState;
-
-const onStoreUpdate = () => {
-  if (localStore.isSupported) {
-    const state = keyringMananger.getState();
-
-    localStore.set({keyrings: state});
-  }
-
-  console.log('keyringMananger update');
-};
-
-// 初始化
-async function initialize(remotePort: Runtime.Port) {
-  const store = (await localStore.get()) as any;
-  const initState = !!store && store.hasOwnProperty('keyrings') ? store.keyrings : {};
-
-  console.log('initialize', store);
-
-  keyringMananger.init({
-    initState,
-    encryptor: encryptorUtils,
-  });
-
-  keyringMananger.on('update', onStoreUpdate);
-
-  const isInitialized = keyringMananger.isInitialized();
-  const isFirstTime = !!store && store.hasOwnProperty('isFirstTime') ? store.isFirstTime : true;
-
-  appState = {
-    ...appState,
-    isLaunch: true,
-    isFirstTime,
-    isInitialized,
-    env: remotePort.name,
-  };
-}
-
-// 开始完成
-async function onboardingComplete() {
-  await localStore.set({isFirstTime: false});
-
-  return {
-    isFirstTime: false,
-  };
-}
-
-/**
- * 创建账号
- * @param {string} password - 账户密码
- * @returns
- */
-async function createAccount(password: string) {
-  await keyringMananger.createNewVaultAndKeychain(password);
-
-  const accounts = await keyringMananger.getAccounts();
-
-  if (!Array.isArray(accounts) || accounts.length === 0) {
-    return;
-  }
-
-  const address = accounts[0];
-  const privateKey = await keyringMananger.exportAccount(address, password);
-  const mnemonic = await keyringMananger.verifySeedPhrase();
-  const mnemonicWords = Buffer.from(mnemonic).toString('utf8');
-  const isInitialized = keyringMananger.isInitialized();
-  const isUnlocked = keyringMananger.isUnlocked();
-
-  return {
-    isInitialized,
-    isUnlocked,
-    address,
-    mnemonicWords,
-    privateKey,
-  };
-}
-
-// 锁住
-async function lock() {
-  await keyringMananger.setLocked();
-
-  const isUnlocked = keyringMananger.isUnlocked();
-
-  return {
-    isUnlocked,
-    address: '',
-    mnemonicWords: '',
-    privateKey: '',
-  };
-}
-
-// 解锁
-async function unlock(password: string) {
-  await keyringMananger.submitPassword(password);
-
-  const accounts = await keyringMananger.getAccounts();
-
-  if (!Array.isArray(accounts) || accounts.length === 0) {
-    return;
-  }
-
-  const address = accounts[0];
-  const privateKey = await keyringMananger.exportAccount(address, password);
-  const mnemonic = await keyringMananger.verifySeedPhrase();
-  const mnemonicWords = Buffer.from(mnemonic).toString('utf8');
-  const isUnlocked = keyringMananger.isUnlocked();
-
-  return {
-    isUnlocked,
-    address,
-    mnemonicWords,
-    privateKey,
-  };
-}
 
 /**
  * Connects a Port to the MetaMask controller via a multiplexed duplex stream.
@@ -150,64 +23,43 @@ function connectRemote(remotePort: Runtime.Port) {
   isClientOpen = true;
 
   const onUpdate = () => {
+    const appState = appManager.getState();
+
     remotePort.postMessage({type: MESSAGE_TYPE.UPDATE_STORE_DATA, payload: appState});
   };
 
-  event.on('update', onUpdate);
+  appManager.on('update', onUpdate);
 
   remotePort.onMessage.addListener(async msg => {
     console.log('background receive msg', msg);
 
-    if (msg.type === MESSAGE_TYPE.WORKER_KEEP_ALIVE_MESSAGE) {
-      remotePort.postMessage({type: MESSAGE_TYPE.ACK_KEEP_ALIVE_MESSAGE});
-    } else {
-      switch (msg.type) {
-        case MESSAGE_TYPE.ONBOARDING_COMPLETE: {
-          const state = await onboardingComplete();
+    switch (msg.type) {
+      case MESSAGE_TYPE.WORKER_KEEP_ALIVE_MESSAGE:
+        appManager.connectRemote(true);
 
-          appState = {
-            ...appState,
-            ...state,
-          };
+        break;
 
-          break;
-        }
-        case MESSAGE_TYPE.CREATE_ACCOUNT: {
-          const state = await createAccount(msg.payload.password);
+      case MESSAGE_TYPE.ONBOARDING_COMPLETE: {
+        await appManager.onboardingComplete();
 
-          appState = {
-            ...appState,
-            ...state,
-          };
+        break;
+      }
+      case MESSAGE_TYPE.CREATE_ACCOUNT: {
+        await appManager.createAccount(msg.payload.password);
 
-          break;
-        }
-        case MESSAGE_TYPE.LOCK: {
-          const state = await lock();
+        break;
+      }
+      case MESSAGE_TYPE.LOCK: {
+        await appManager.lock();
 
-          appState = {
-            ...appState,
-            ...state,
-          };
+        break;
+      }
+      case MESSAGE_TYPE.UNLOCK: {
+        await appManager.unlock(msg.payload.password);
 
-          break;
-        }
-        case MESSAGE_TYPE.UNLOCK: {
-          const state = await unlock(msg.payload.password);
-
-          appState = {
-            ...appState,
-            ...state,
-          };
-
-          break;
-        }
+        break;
       }
     }
-
-    console.log(msg.type, appState);
-
-    event.emit('update');
   });
 
   if (processName === ENVIRONMENT_TYPE[ENVIRONMENT_TYPE.POPUP]) {
@@ -217,9 +69,7 @@ function connectRemote(remotePort: Runtime.Port) {
       popupIsOpen = false;
       isClientOpen = false;
 
-      event.off('update', onUpdate);
-
-      keyringMananger.off('update', onStoreUpdate);
+      appManager.off('update', onUpdate);
 
       console.log(processName, 'is closed');
     });
@@ -233,22 +83,18 @@ function connectRemote(remotePort: Runtime.Port) {
       delete openMetamaskTabsIDs[tabId];
       isClientOpen = false;
 
-      event.off('update', onUpdate);
-
-      keyringMananger.off('update', onStoreUpdate);
+      appManager.off('update', onUpdate);
 
       console.log(processName, 'is closed');
     });
   }
-
-  onUpdate();
 }
 
 browser.runtime.onConnect.addListener(async remotePort => {
   // Queue up connection attempts here, waiting until after initialization
   // await isInitialized;
   // This is set in `setupController`, which is called as part of initialization
-  await initialize(remotePort);
+  await appManager.init(remotePort.name);
 
   connectRemote(remotePort);
 
@@ -257,7 +103,7 @@ browser.runtime.onConnect.addListener(async remotePort => {
 
 // On first install, open a new tab with MetaMask
 browser.runtime.onInstalled.addListener(({reason}) => {
-  console.log('browser.runtime.onInstalled', reason, appState);
+  console.log('browser.runtime.onInstalled', reason);
 });
 
 // 监听消息事件

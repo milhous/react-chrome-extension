@@ -17,7 +17,7 @@ interface IKeyringManangerInitParams {
   isManifestV3?: boolean;
 }
 
-interface IKeyringMananger {
+interface IKeyringMananger extends EventEmitter {
   init(params?: IKeyringManangerInitParams): void;
   createNewVaultAndKeychain(password: string): Promise<any>;
   createNewVaultAndRestore(password: string, encodedSeedPhrase: string): Promise<any>;
@@ -34,8 +34,6 @@ interface IKeyringMananger {
   getState(): any;
   getMemState(): any;
   isInitialized(): boolean;
-  on(eventName: string | symbol, listener: (...args: any[]) => void);
-  off(eventName: string | symbol, listener: () => void);
 }
 
 // Keyring 管理器

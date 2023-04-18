@@ -135,7 +135,9 @@ export default function CreateAccount() {
 
   useEffect(() => {
     if (isUnlocked) {
-      navigate(ROUTES.WALLET);
+      navigate(ROUTES.WALLET, {
+        replace: true,
+      });
     }
   }, [isUnlocked]);
 

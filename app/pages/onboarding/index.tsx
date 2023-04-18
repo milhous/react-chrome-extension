@@ -45,8 +45,8 @@ const StepDot = (props: {index: number; curIndex: number}) => {
 
 export default function PageOnboarding() {
   const navigate = useNavigate();
-  const {isFirstTime, env} = useSelector<IAppStoreState>(state => {
-    return {isFirstTime: state.app.isFirstTime, env: state.app.env};
+  const {isOnboarding, env} = useSelector<IAppStoreState>(state => {
+    return {isOnboarding: state.app.isOnboarding, env: state.app.env};
   }) as Partial<IAppState>;
   const isPopup = env === ENVIRONMENT_TYPE[ENVIRONMENT_TYPE.POPUP];
 
@@ -69,10 +69,12 @@ export default function PageOnboarding() {
   };
 
   useEffect(() => {
-    if (!isFirstTime) {
-      navigate(ROUTES.WELCOME);
+    if (!isOnboarding) {
+      navigate(ROUTES.WELCOME, {
+        replace: true,
+      });
     }
-  }, [isFirstTime]);
+  }, [isOnboarding]);
 
   return (
     <section className="app-page app-page_onboarding flex flex-col">

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --animation-duration: 0.3s;
+}
+
 body {
   background-color: #edf1f9;
 }
@@ -34,6 +38,10 @@ body {
       @apply bg-white text-primary-blue;
 
       @extend .app-btn;
+    }
+
+    &_icon {
+      @apply cursor-pointer text-midnight-blue transition-colors hover:text-primary-blue;
     }
   }
 

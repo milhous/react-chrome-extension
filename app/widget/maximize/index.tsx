@@ -11,12 +11,16 @@ export default function WidgetMaximize() {
   const handleMaximize = evt => {
     evt.preventDefault();
 
-    getEnvironmentType() === ENVIRONMENT_TYPE.POPUP ? extension.openExtensionInBrowser('') : navigate('/home');
+    getEnvironmentType() === ENVIRONMENT_TYPE.POPUP
+      ? extension.openExtensionInBrowser('')
+      : navigate('/home', {
+          replace: true,
+        });
   };
 
   return (
-    <button className="widget-maximize absolute right-[15px] top-[15px]" onClick={handleMaximize}>
-      <Assets.IconMaximize className="text-primary-blue" />
+    <button className="widget-maximize app-btn_icon absolute right-[15px] top-[15px]" onClick={handleMaximize}>
+      <Assets.IconMaximize />
     </button>
   );
 }
