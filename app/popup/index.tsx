@@ -19,7 +19,7 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <MemoryRouter initialEntries={['/popup']}>
     <main className="app-popup relative h-[600px] w-[375px] overflow-auto">
-      <App envType={ENVIRONMENT_TYPE.POPUP} />
+      <App />
     </main>
   </MemoryRouter>,
 );

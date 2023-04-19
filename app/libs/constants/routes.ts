@@ -2,6 +2,7 @@ const LOADING = '/';
 const WELCOME = '/welcome';
 const ONBOARDING = '/onboarding';
 const WALLET = '/wallet';
+const PROFILE = '/profile';
 const SETTINGS = '/settings';
 
 const ROUTES = {
@@ -9,6 +10,7 @@ const ROUTES = {
   WELCOME,
   ONBOARDING,
   WALLET,
+  PROFILE,
   SETTINGS,
 };
 

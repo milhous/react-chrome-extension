@@ -1,6 +1,6 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {Link} from 'react-router-dom';
+import {Link, useMatch, useNavigate} from 'react-router-dom';
 import Jazzicon, {jsNumberForAddress} from 'react-jazzicon';
 
 import Assets from '@assets/index';
@@ -56,7 +56,7 @@ const RemoveAccount = ({address}: {address: string}) => {
   };
 
   return (
-    <li onClick={handleRemove}>
+    <li className={address === '' ? '!hidden' : ''} onClick={handleRemove}>
       <Assets.IconTrash />
       删除账户
     </li>
@@ -81,8 +81,14 @@ const SignOut = () => {
 
 // header - menu
 export default function HeaderMenu() {
-  const {env, address = ''} = useSelector<IAppStoreState>(state => {
-    return {env: state.app.env, address: state.app.address};
+  const navigate = useNavigate();
+  const match = useMatch(ROUTES.SETTINGS);
+  const {
+    isUnlocked,
+    env,
+    address = '',
+  } = useSelector<IAppStoreState>(state => {
+    return {isUnlocked: state.app.isUnlocked, env: state.app.env, address: state.app.address};
   }) as Partial<IAppState>;
   const isPopup = env === ENVIRONMENT_TYPE[ENVIRONMENT_TYPE.POPUP];
 
@@ -92,6 +98,19 @@ export default function HeaderMenu() {
   const handleDrawer = (state: boolean) => {
     setDrawerOpen(state);
   };
+
+  useEffect(() => {
+    if (!isUnlocked) {
+      navigate(ROUTES.WELCOME, {replace: true});
+    }
+  }, [isUnlocked]);
+
+  useEffect(() => {
+    // 当没有账户时，除了设置，都跳转至钱包页
+    if (address === '' && !match) {
+      navigate(ROUTES.WALLET, {replace: true});
+    }
+  }, [address]);
 
   return (
     <div className="flex items-center justify-center">
@@ -128,8 +147,10 @@ export default function HeaderMenu() {
               Exchange
             </li>
             <li>
-              <Assets.IconUser />
-              Profile
+              <Link to={ROUTES.PROFILE}>
+                <Assets.IconUser />
+                账户详情
+              </Link>
             </li>
             {isPopup && <ExpandView />}
             <RemoveAccount address={address} />

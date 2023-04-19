@@ -11,10 +11,11 @@ import {initialState} from '@store/reducer';
  * @method init 初始化
  * @method connectRemote 连接远程
  * @method onboardingComplete 完成培训
- * @method createAccount 创建账号
- * @method removeAccount 移除账号
- * @method lock 锁定账号
- * @method unlock 解锁账号
+ * @method createAccount 创建账户
+ * @method createAccount 新增账户
+ * @method removeAccount 移除账户
+ * @method lock 锁定账户
+ * @method unlock 解锁账户
  * @method getState 获取状态
  */
 interface IAppManager extends EventEmitter {
@@ -22,6 +23,7 @@ interface IAppManager extends EventEmitter {
   connectRemote(isConnected: boolean): void;
   onboardingComplete(): Promise<void>;
   createAccount(password: string): Promise<void>;
+  addAccount(): Promise<void>;
   removeAccount(address: string): Promise<void>;
   lock(): Promise<void>;
   unlock(password: string): Promise<void>;
@@ -98,8 +100,8 @@ class AppManager extends EventEmitter {
   }
 
   /**
-   * 创建账号
-   * @param {string} password 账号密码
+   * 创建账户
+   * @param {string} password 账户密码
    */
   async createAccount(password: string): Promise<void> {
     await keyringMananger.createNewVaultAndKeychain(password);
@@ -122,11 +124,28 @@ class AppManager extends EventEmitter {
     });
   }
 
+  // 新增账户
+  async addAccount(): Promise<void> {
+    // 解决删除账户后重新打开时，密码不存在的问题
+    await keyringMananger.submitEncryptionKey();
+
+    const accounts = await keyringMananger.addNewAccount();
+    const address = accounts.length ? accounts[0] : '';
+
+    this._updateState({
+      address,
+      accounts,
+    });
+  }
+
   /**
-   * 移除账号
+   * 移除账户
    * @param {string} address 地址
    */
   async removeAccount(address: string): Promise<void> {
+    // 解决删除账户后重新打开时，密码不存在的问题
+    await keyringMananger.submitEncryptionKey();
+
     await keyringMananger.removeAccount(address);
 
     const accounts = await keyringMananger.getAccounts();
@@ -140,14 +159,13 @@ class AppManager extends EventEmitter {
     });
   }
 
-  // 锁定账号
+  // 锁定账户
   async lock(): Promise<void> {
     await keyringMananger.setLocked();
 
+    const accounts = [];
     const address = '';
     const isUnlocked = keyringMananger.isUnlocked();
-
-    const accounts = await keyringMananger.getAccounts();
 
     this._updateState({
       isUnlocked,
@@ -157,19 +175,14 @@ class AppManager extends EventEmitter {
   }
 
   /**
-   * 解锁账号
-   * @param {string} password 账号密码
+   * 解锁账户
+   * @param {string} password 账户密码
    */
   async unlock(password: string): Promise<void> {
     await keyringMananger.submitPassword(password);
 
     const accounts = await keyringMananger.getAccounts();
-
-    if (accounts.length === 0) {
-      return;
-    }
-
-    const address = accounts[0];
+    const address = accounts.length ? accounts[0] : '';
     const isUnlocked = keyringMananger.isUnlocked();
 
     this._updateState({

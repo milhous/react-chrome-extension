@@ -14,6 +14,7 @@ import IconShuffle from './shuffle.svg';
 import IconUser from './user.svg';
 import IconSettings from './settings.svg';
 import IconTrash from './trash.svg';
+import IconArrowRight from './arrow-right.svg';
 import picOnboardingDesktop from './onboarding-desktop.svg?url';
 import picOnboardingIdea from './onboarding-idea.svg?url';
 import picOnboardingMobile from './onboarding-mobile.svg?url';
@@ -36,6 +37,7 @@ const Assets = {
   IconUser,
   IconSettings,
   IconTrash,
+  IconArrowRight,
   picOnboardingDesktop,
   picOnboardingIdea,
   picOnboardingMobile,
