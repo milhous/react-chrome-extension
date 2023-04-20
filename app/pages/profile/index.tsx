@@ -40,9 +40,12 @@ export default function PageProfile() {
       <UIHeader title="账户详情" />
       <div className="app-section">
         <div className="app-card">
-          <div className="mx-auto box-border h-[120px] w-[120px] rounded-xl bg-white p-3 shadow">
+          <div className="mx-auto box-border h-[160px] w-[160px] rounded-xl bg-white p-3 shadow">
             <img className="block h-full w-full" src={qrcode} />
           </div>
+          <p>{address}</p>
+          <button className="app-btn_outline">导出私钥</button>
+          <button className="app-btn_outline">显示助记词</button>
         </div>
       </div>
       <UINavigation />

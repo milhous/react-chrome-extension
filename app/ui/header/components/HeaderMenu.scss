@@ -20,6 +20,14 @@
         }
       }
     }
+
+    li a.active {
+      @apply cursor-default text-primary-blue;
+
+      svg {
+        @apply text-primary-blue;
+      }
+    }
   }
 
   &_jazzicon {

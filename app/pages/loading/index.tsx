@@ -63,7 +63,7 @@ export default function PageLoading() {
   }, [isLaunch, isOnboarding, isUnlocked]);
 
   return (
-    <section className="app-page app-page_loading flex flex-col items-center justify-center bg-white">
+    <section className="app-page app-page_loading !fixed inset-0 flex flex-col items-center justify-center bg-white">
       <img className="aspect-square w-20" src={Assets.IconLogo} />
       <p className="mb-12 mt-5 text-[19px] leading-6 text-midnight-blue">Welcome to Milhous</p>
       <div>

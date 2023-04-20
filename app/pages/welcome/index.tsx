@@ -16,7 +16,7 @@ export default function PageWelcome() {
   const isPopup = env === ENVIRONMENT_TYPE[ENVIRONMENT_TYPE.POPUP];
 
   return (
-    <section className="app-page app-page_welcome flex flex-col items-center pt-[50px]">
+    <section className="app-page app-page_welcome !fixed inset-0 flex flex-col items-center pt-[50px]">
       <img className="aspect-square w-[120px]" src={Assets.IconLogo} />
       <dl className="mt-[30px] text-center">
         <dt className="text-[36px] font-bold leading-[45px] text-midnight-blue">

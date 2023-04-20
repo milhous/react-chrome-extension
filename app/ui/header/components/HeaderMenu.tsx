@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {Link, useMatch, useNavigate} from 'react-router-dom';
+import {NavLink, useMatch, useNavigate} from 'react-router-dom';
 import Jazzicon, {jsNumberForAddress} from 'react-jazzicon';
 
 import Assets from '@assets/index';
@@ -126,10 +126,10 @@ export default function HeaderMenu() {
           <JazzIcon address={address} />
           <ul className="h-full">
             <li>
-              <Link to={ROUTES.WALLET} replace>
+              <NavLink to={ROUTES.WALLET} replace className={({isActive}) => (isActive ? 'active' : '')}>
                 <Assets.IconHome />
                 钱包
-              </Link>
+              </NavLink>
             </li>
             <li>
               <Assets.IconPlusCircle />
@@ -147,18 +147,18 @@ export default function HeaderMenu() {
               Exchange
             </li>
             <li>
-              <Link to={ROUTES.PROFILE}>
+              <NavLink to={ROUTES.PROFILE} className={({isActive}) => (isActive ? 'active' : '')}>
                 <Assets.IconUser />
                 账户详情
-              </Link>
+              </NavLink>
             </li>
             {isPopup && <ExpandView />}
             <RemoveAccount address={address} />
             <li>
-              <Link to={ROUTES.SETTINGS}>
+              <NavLink to={ROUTES.SETTINGS} className={({isActive}) => (isActive ? 'active' : '')}>
                 <Assets.IconSettings />
                 设置
-              </Link>
+              </NavLink>
             </li>
           </ul>
           <ul>

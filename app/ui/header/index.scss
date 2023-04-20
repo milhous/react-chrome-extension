@@ -1,0 +1,11 @@
+.ui-header {
+  @apply sticky top-0 z-10 w-full bg-background-gray/50 backdrop-blur shadow;
+
+  section {
+    @apply box-border flex h-12 min-h-[48px] items-center justify-between px-5;
+  }
+
+  h1 {
+    @apply text-[18px];
+  }
+}
