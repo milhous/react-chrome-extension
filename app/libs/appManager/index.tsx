@@ -187,9 +187,6 @@ class AppManager extends EventEmitter {
   async unlock(password: string): Promise<void> {
     await keyringMananger.submitPassword(password);
 
-    // 解决删除账户后重新打开时，密码不存在的问题
-    await keyringMananger.submitEncryptionKey();
-
     const accounts = await keyringMananger.getAccounts();
     const address = accounts.length ? accounts[0] : '';
     const isUnlocked = keyringMananger.isUnlocked();

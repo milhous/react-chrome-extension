@@ -317,6 +317,9 @@ class KeyringMananger extends EventEmitter {
   public async exportAccount(address: string, password: string): Promise<string> {
     await this.verifyPassword(password);
 
+    // 解决密码验证通过，但账户为空的情况
+    await this._keyringController.submitPassword(password);
+
     return this._keyringController.exportAccount(address, password);
   }
 
