@@ -69,6 +69,21 @@ function connectRemote(remotePort: Runtime.Port) {
 
         break;
       }
+      case MESSAGE_TYPE.GET_PRIVATE_KEY: {
+        await appManager.getPrivateKey(msg.payload.address, msg.payload.password);
+
+        break;
+      }
+      case MESSAGE_TYPE.GET_MNEMONIC_PHRASE: {
+        await appManager.getMnemonicWords();
+
+        break;
+      }
+      case MESSAGE_TYPE.CLEAR_PRIVATE_DATA: {
+        appManager.clearPrivateInfo();
+
+        break;
+      }
     }
   });
 

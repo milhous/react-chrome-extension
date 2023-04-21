@@ -3,6 +3,7 @@ import {Route, Routes, Navigate} from 'react-router-dom';
 
 import ROUTES from '@libs/constants/routes';
 import {AppProvider} from '@store/Provider';
+import UIModal from '@ui/modal';
 import PageLoading from '@pages/loading';
 import PageOnboarding from '@pages/onboarding';
 import PageWelcome from '@pages/welcome';
@@ -29,6 +30,7 @@ function App() {
             </Routes>
           </Suspense>
         </div>
+        <UIModal />
       </AppProvider>
     </StrictMode>
   );

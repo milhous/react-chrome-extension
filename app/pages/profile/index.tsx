@@ -9,6 +9,7 @@ import messageManager from '@libs/messageManager';
 import {IAppStoreState, IAppState} from '@store/types';
 import UIHeader from '@ui/header';
 import UINavigation from '@ui/navigation';
+import {showModal, MODAL_TYPE} from '@ui/modal';
 
 import './index.scss';
 
@@ -27,6 +28,10 @@ export default function PageProfile() {
   }) as Partial<IAppState>;
   const [qrcode, setQrcode] = useState<string>('');
 
+  const handlePrivateKey = () => {
+    showModal(MODAL_TYPE.ACCOUNT_PRIVATE_KEY, {address});
+  };
+
   useEffect(() => {
     if (!!address) {
       QRCode.toDataURL(address, qrCodeOpts).then(url => {
@@ -39,12 +44,14 @@ export default function PageProfile() {
     <section className="app-page page-profile">
       <UIHeader title="账户详情" />
       <div className="app-section">
-        <div className="app-card">
+        <div className="app-card space-y-5">
           <div className="mx-auto box-border h-[160px] w-[160px] rounded-xl bg-white p-3 shadow">
             <img className="block h-full w-full" src={qrcode} />
           </div>
-          <p>{address}</p>
-          <button className="app-btn_outline">导出私钥</button>
+          <p className="break-all text-center">{address}</p>
+          <button className="app-btn_outline" onClick={handlePrivateKey}>
+            导出私钥
+          </button>
           <button className="app-btn_outline">显示助记词</button>
         </div>
       </div>

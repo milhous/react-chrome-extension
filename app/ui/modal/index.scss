@@ -1,0 +1,25 @@
+.ui-modal {
+  .modal-content {
+    @apply relative w-full overflow-hidden rounded-2xl bg-white shadow-lg;
+
+    &_title {
+      @apply h-[50px] bg-background-gray text-center text-[16px] leading-[50px] text-midnight-blue;
+    }
+
+    &_box {
+      @apply relative p-6;
+    }
+  }
+
+  .modal-btn {
+    @apply mx-auto flex h-[80px] items-center justify-center space-x-[10px] rounded-[40px] text-[26px];
+  }
+
+  .modal-btn_close {
+    @apply absolute right-[15px] top-[15px];
+
+    svg {
+      @apply h-5 w-5;
+    }
+  }
+}

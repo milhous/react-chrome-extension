@@ -16,7 +16,10 @@ import {initialState} from '@store/reducer';
  * @method removeAccount 移除账户
  * @method lock 锁定账户
  * @method unlock 解锁账户
+ * @method getMnemonicWords 获取助记词
+ * @method getPrivateKey 获取私钥
  * @method getState 获取状态
+ * @method clearPrivateInfo 清理私有信息（私钥 & 助记词）
  */
 interface IAppManager extends EventEmitter {
   init(env: string): Promise<void>;
@@ -27,7 +30,10 @@ interface IAppManager extends EventEmitter {
   removeAccount(address: string): Promise<void>;
   lock(): Promise<void>;
   unlock(password: string): Promise<void>;
+  getMnemonicWords(): Promise<void>;
+  getPrivateKey(address: string, password: string): Promise<void>;
   getState(): IAppState;
+  clearPrivateInfo(): void;
 }
 
 const localStore = new LocalStore();
@@ -76,7 +82,7 @@ class AppManager extends EventEmitter {
       isOnboarding,
       isInitialized,
       env,
-      accounts: ['11'],
+      accounts,
     });
   }
 
@@ -181,6 +187,9 @@ class AppManager extends EventEmitter {
   async unlock(password: string): Promise<void> {
     await keyringMananger.submitPassword(password);
 
+    // 解决删除账户后重新打开时，密码不存在的问题
+    await keyringMananger.submitEncryptionKey();
+
     const accounts = await keyringMananger.getAccounts();
     const address = accounts.length ? accounts[0] : '';
     const isUnlocked = keyringMananger.isUnlocked();
@@ -193,11 +202,13 @@ class AppManager extends EventEmitter {
   }
 
   // 获取助记词
-  async getMnemonicWords(): Promise<string> {
+  async getMnemonicWords(): Promise<void> {
     const mnemonic = await keyringMananger.verifySeedPhrase();
     const mnemonicWords = Buffer.from(mnemonic).toString('utf8');
 
-    return mnemonicWords;
+    this._updateState({
+      mnemonicWords,
+    });
   }
 
   /**
@@ -206,10 +217,12 @@ class AppManager extends EventEmitter {
    * @param {string} password 密码
    * @returns {string}
    */
-  async getPrivateKey(address: string, password: string): Promise<string> {
+  async getPrivateKey(address: string, password: string): Promise<void> {
     const privateKey = await keyringMananger.exportAccount(address, password);
 
-    return privateKey;
+    this._updateState({
+      privateKey,
+    });
   }
 
   /**
@@ -218,6 +231,14 @@ class AppManager extends EventEmitter {
    */
   getState(): IAppState {
     return this._state;
+  }
+
+  // 清理私有信息（私钥 & 助记词）
+  clearPrivateInfo(): void {
+    this._updateState({
+      privateKey: '',
+      mnemonicWords: '',
+    });
   }
 
   // 更新状态
