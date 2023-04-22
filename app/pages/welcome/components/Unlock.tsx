@@ -1,32 +1,18 @@
-'use client';
-
-import {useDeferredValue, useEffect, useMemo, useState} from 'react';
+import {useDeferredValue, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {useForm, SubmitHandler} from 'react-hook-form';
-import zxcvbn from 'zxcvbn';
 import classnames from 'classnames';
 
 import Assets from '@assets/index';
 import {MESSAGE_TYPE} from '@libs/constants/app';
 import ROUTES from '@libs/constants/routes';
-import {PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH} from '@libs/constants/form';
+import {PASSWORD_MIN_LENGTH, INPUT_TYPE} from '@libs/constants/form';
 import messageManager from '@libs/messageManager';
 import {IAppStoreState} from '@store/types';
 
 interface IFormInput {
   password: string;
-}
-
-/**
- * 输入框类型
- * NONE 无
- * PASSWORD 密码
- * CONFIRM_PASSWORD 确认密码
- */
-enum InputType {
-  NONE,
-  PASSWORD,
 }
 
 // 解锁
@@ -43,7 +29,7 @@ export default function Unlock() {
     clearErrors,
   } = useForm<IFormInput>();
 
-  const [inputTypeFocus, setInputTypeFocus] = useState<number>(InputType.NONE);
+  const [inputTypeFocus, setInputTypeFocus] = useState<number>(INPUT_TYPE.NONE);
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const deferredPassword = useDeferredValue(watch('password'));
 
@@ -72,19 +58,19 @@ export default function Unlock() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="mt-8 w-[330px] space-y-5">
         <div>
-          <div className={classnames('app-form_input', inputTypeFocus === InputType.PASSWORD ? 'app-form_focus' : '')}>
+          <div className={classnames('app-form_input', inputTypeFocus === INPUT_TYPE.PASSWORD ? 'app-form_focus' : '')}>
             <input
               type={passwordVisible ? 'text' : 'password'}
               placeholder={`密码`}
               autoComplete="new-password"
               onFocus={() => {
-                setInputTypeFocus(InputType.PASSWORD);
+                setInputTypeFocus(INPUT_TYPE.PASSWORD);
 
                 clearErrors();
               }}
               {...register('password', {
                 onBlur: () => {
-                  setInputTypeFocus(InputType.NONE);
+                  setInputTypeFocus(INPUT_TYPE.NONE);
                 },
                 minLength: PASSWORD_MIN_LENGTH,
                 required: true,

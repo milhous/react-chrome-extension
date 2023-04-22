@@ -21,7 +21,7 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <MemoryRouter initialEntries={['/home']}>
     <main className="app-home relative h-full w-full overflow-auto">
-      <App envType={ENVIRONMENT_TYPE.FULLSCREEN} />
+      <App />
     </main>
   </MemoryRouter>,
 );

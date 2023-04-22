@@ -77,11 +77,11 @@ export default function PageOnboarding() {
   }, [isOnboarding]);
 
   return (
-    <section className="app-page app-page_onboarding flex flex-col">
+    <section className="app-page app-page_onboarding !fixed inset-0 flex flex-col">
       <div className="flex h-[326px] min-h-[326px] w-full items-center justify-center">
         <img src={stepInfo[stepIndex].img} />
       </div>
-      <div className="relative box-border flex h-full flex-col items-center justify-around rounded-t-[20px] bg-white pb-1 pt-6 shadow">
+      <div className="relative box-border flex h-full w-full flex-col items-center justify-around rounded-t-[20px] bg-white pb-1 pt-6 shadow">
         <ul className="absolute inset-x-0 top-0 flex h-6 items-center justify-center space-x-2.5">
           {stepInfo.map((item, index) => {
             return <StepDot key={index} curIndex={stepIndex} index={index} />;

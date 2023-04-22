@@ -1,6 +1,6 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {Link} from 'react-router-dom';
+import {NavLink, useMatch, useNavigate} from 'react-router-dom';
 import Jazzicon, {jsNumberForAddress} from 'react-jazzicon';
 
 import Assets from '@assets/index';
@@ -41,6 +41,28 @@ const ExpandView = () => {
   );
 };
 
+/**
+ * 移除账户
+ * @param {string} address 当前账户地址
+ */
+const RemoveAccount = ({address}: {address: string}) => {
+  const handleRemove = () => {
+    messageManager.sendMessage({
+      type: MESSAGE_TYPE.REMOVE_ACCOUNT,
+      payload: {
+        address,
+      },
+    });
+  };
+
+  return (
+    <li className={address === '' ? '!hidden' : ''} onClick={handleRemove}>
+      <Assets.IconTrash />
+      删除账户
+    </li>
+  );
+};
+
 // 注销
 const SignOut = () => {
   const handleLogout = () => {
@@ -59,8 +81,14 @@ const SignOut = () => {
 
 // header - menu
 export default function HeaderMenu() {
-  const {env, address = ''} = useSelector<IAppStoreState>(state => {
-    return {env: state.app.env, address: state.app.address};
+  const navigate = useNavigate();
+  const match = useMatch(ROUTES.SETTINGS);
+  const {
+    isUnlocked,
+    env,
+    address = '',
+  } = useSelector<IAppStoreState>(state => {
+    return {isUnlocked: state.app.isUnlocked, env: state.app.env, address: state.app.address};
   }) as Partial<IAppState>;
   const isPopup = env === ENVIRONMENT_TYPE[ENVIRONMENT_TYPE.POPUP];
 
@@ -70,6 +98,19 @@ export default function HeaderMenu() {
   const handleDrawer = (state: boolean) => {
     setDrawerOpen(state);
   };
+
+  useEffect(() => {
+    if (!isUnlocked) {
+      navigate(ROUTES.WELCOME, {replace: true});
+    }
+  }, [isUnlocked]);
+
+  useEffect(() => {
+    // 当没有账户时，除了设置，都跳转至钱包页
+    if (address === '' && !match) {
+      navigate(ROUTES.WALLET, {replace: true});
+    }
+  }, [address]);
 
   return (
     <div className="flex items-center justify-center">
@@ -85,10 +126,10 @@ export default function HeaderMenu() {
           <JazzIcon address={address} />
           <ul className="h-full">
             <li>
-              <Link to={ROUTES.WALLET} replace>
+              <NavLink to={ROUTES.WALLET} replace className={({isActive}) => (isActive ? 'active' : '')}>
                 <Assets.IconHome />
                 钱包
-              </Link>
+              </NavLink>
             </li>
             <li>
               <Assets.IconPlusCircle />
@@ -106,15 +147,18 @@ export default function HeaderMenu() {
               Exchange
             </li>
             <li>
-              <Assets.IconUser />
-              Profile
+              <NavLink to={ROUTES.PROFILE} className={({isActive}) => (isActive ? 'active' : '')}>
+                <Assets.IconUser />
+                账户详情
+              </NavLink>
             </li>
             {isPopup && <ExpandView />}
+            <RemoveAccount address={address} />
             <li>
-              <Link to={ROUTES.SETTINGS}>
+              <NavLink to={ROUTES.SETTINGS} className={({isActive}) => (isActive ? 'active' : '')}>
                 <Assets.IconSettings />
                 设置
-              </Link>
+              </NavLink>
             </li>
           </ul>
           <ul>

@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useSelector} from 'react-redux';
-import QRCode from 'qrcode';
 
 import Assets from '@assets/index';
 import {MESSAGE_TYPE} from '@libs/constants/app';
@@ -9,12 +8,9 @@ import ROUTES from '@libs/constants/routes';
 import messageManager from '@libs/messageManager';
 import {IAppStoreState, IAppState} from '@store/types';
 import UIHeader from '@ui/header';
+import UINavigation from '@ui/navigation';
 
 import './index.scss';
-
-const qrCodeOpts = {
-  margin: 0,
-};
 
 // 地址
 // 0x126b8528ea6966f0089554fed347d7038139185e
@@ -34,9 +30,26 @@ const WalletItem = (props: {title: string | undefined; desc: string | undefined}
   );
 };
 
+const Account = () => {
+  const handleAddAccount = () => {
+    messageManager.sendMessage({
+      type: MESSAGE_TYPE.ADD_ACCOUNT,
+    });
+  };
+
+  return (
+    <div className="flex h-full flex-col items-center justify-center space-y-4">
+      <button className="app-btn_primary" onClick={handleAddAccount}>
+        创建账户
+      </button>
+      <button className="app-btn_outline">导入账户</button>
+    </div>
+  );
+};
+
 export default function PageWallet() {
   const navigate = useNavigate();
-  const {isUnlocked, address, mnemonicWords, privateKey} = useSelector<IAppStoreState>(state => {
+  const {isUnlocked, address} = useSelector<IAppStoreState>(state => {
     return {
       isUnlocked: state.app.isUnlocked,
       address: state.app.address,
@@ -44,7 +57,6 @@ export default function PageWallet() {
       privateKey: state.app.privateKey,
     };
   }) as Partial<IAppState>;
-  const [qrcode, setQrcode] = useState<string>('');
 
   useEffect(() => {
     if (!isUnlocked) {
@@ -54,27 +66,13 @@ export default function PageWallet() {
     }
   }, [isUnlocked]);
 
-  useEffect(() => {
-    if (!!address) {
-      QRCode.toDataURL(address, qrCodeOpts).then(url => {
-        setQrcode(url);
-      });
-    }
-  }, [address]);
-
   return (
     <section className="app-page page-wallet">
       <UIHeader />
       <div className="app-section">
-        <div className="page-wallet_card box-border space-y-4 rounded-3xl bg-white p-6 shadow">
-          <WalletItem title="地址" desc={address} />
-          <div className="mx-auto box-border h-[120px] w-[120px] rounded-xl bg-white p-3 shadow">
-            <img className="block h-full w-full" src={qrcode} />
-          </div>
-          <WalletItem title="助记词" desc={mnemonicWords} />
-          <WalletItem title="私钥" desc={privateKey} />
-        </div>
+        <div className="app-card">{address === '' && <Account />}</div>
       </div>
+      <UINavigation />
     </section>
   );
 }

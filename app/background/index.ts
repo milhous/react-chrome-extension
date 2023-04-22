@@ -49,6 +49,16 @@ function connectRemote(remotePort: Runtime.Port) {
 
         break;
       }
+      case MESSAGE_TYPE.ADD_ACCOUNT: {
+        await appManager.addAccount();
+
+        break;
+      }
+      case MESSAGE_TYPE.REMOVE_ACCOUNT: {
+        await appManager.removeAccount(msg.payload.address);
+
+        break;
+      }
       case MESSAGE_TYPE.LOCK: {
         await appManager.lock();
 
@@ -56,6 +66,21 @@ function connectRemote(remotePort: Runtime.Port) {
       }
       case MESSAGE_TYPE.UNLOCK: {
         await appManager.unlock(msg.payload.password);
+
+        break;
+      }
+      case MESSAGE_TYPE.GET_PRIVATE_KEY: {
+        await appManager.getPrivateKey(msg.payload.address, msg.payload.password);
+
+        break;
+      }
+      case MESSAGE_TYPE.GET_MNEMONIC_PHRASE: {
+        await appManager.getMnemonicWords(msg.payload.password);
+
+        break;
+      }
+      case MESSAGE_TYPE.CLEAR_PRIVATE_DATA: {
+        appManager.clearPrivateInfo();
 
         break;
       }

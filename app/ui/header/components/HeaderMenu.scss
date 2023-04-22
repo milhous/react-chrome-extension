@@ -11,13 +11,21 @@
       @apply cursor-pointer flex items-center text-[16px] leading-6 text-midnight-blue hover:text-primary-blue transition-colors;
 
       svg {
-        @apply mr-3 text-gray transition-colors;
+        @apply mr-3 text-gray transition-colors w-5 h-5;
       }
 
       &:hover {
         svg {
           @apply text-primary-blue;
         }
+      }
+    }
+
+    li a.active {
+      @apply cursor-default text-primary-blue;
+
+      svg {
+        @apply text-primary-blue;
       }
     }
   }

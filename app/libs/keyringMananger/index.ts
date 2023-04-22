@@ -21,15 +21,18 @@ interface IKeyringMananger extends EventEmitter {
   init(params?: IKeyringManangerInitParams): void;
   createNewVaultAndKeychain(password: string): Promise<any>;
   createNewVaultAndRestore(password: string, encodedSeedPhrase: string): Promise<any>;
+  addNewAccount(): Promise<string[]>;
   verifyPassword(password: string): Promise<void>;
   verifySeedPhrase(): Promise<number[]>;
   verifyAccounts(createdAccounts: string[], seedPhrase: Buffer): Promise<void>;
-  exportAccount(address: string, password: string): Promise<string>;
+  removeAccount(address: string): Promise<string>;
   submitPassword(password: string): Promise<object>;
+  submitEncryptionKey(): Promise<void>;
   isUnlocked(): boolean;
   setLocked(): Promise<void>;
+  getPrivateKey(address: string, password: string): Promise<string>;
+  getMnemonicWords(password: string): Promise<string>;
   getPrimaryKeyringMnemonic(): any;
-  getPrimaryKey(): Promise<string>;
   getAccounts(): Promise<string[]>;
   getState(): any;
   getMemState(): any;
@@ -197,6 +200,32 @@ class KeyringMananger extends EventEmitter {
   }
 
   /**
+   * Adds a new account to the default (first) HD seed phrase Keyring.
+   *
+   * @param accountCount
+   * @returns {} keyState
+   */
+  async addNewAccount(): Promise<string[]> {
+    let [primaryKeyring] = this._keyringController.getKeyringsByType(KeyringType.hdKeyTree);
+
+    if (!!primaryKeyring) {
+      await this._keyringController.addNewAccount(primaryKeyring);
+
+      await this.verifySeedPhrase();
+    } else {
+      primaryKeyring = await this._keyringController.addNewKeyring(KeyringType.hdKeyTree);
+    }
+
+    if (!primaryKeyring) {
+      throw new Error('MetamaskController - No HD Key Tree found');
+    }
+
+    const accounts = await this._keyringController.getAccounts();
+
+    return accounts;
+  }
+
+  /**
    * Submits a user's password to check its validity.
    *
    * @param {string} password - The user's password
@@ -281,14 +310,29 @@ class KeyringMananger extends EventEmitter {
   }
 
   /**
-   * Export Account
-   * @param {string} address - 地址
-   * @param {string} password - 密码
+   * Removes an account from state / storage.
+   *
+   * @param {string} address - A hex address
    */
-  public async exportAccount(address: string, password: string): Promise<string> {
-    await this.verifyPassword(password);
+  async removeAccount(address: string): Promise<string> {
+    // Remove all associated permissions
+    // this.removeAllAccountPermissions(address);
+    // Remove account from the preferences controller
+    // this.preferencesController.removeAddress(address);
+    // Remove account from the account tracker controller
+    // this.accountTracker.removeAccount([address]);
 
-    return this._keyringController.exportAccount(address, password);
+    const keyring = await this._keyringController.getKeyringForAccount(address);
+    // Remove account from the keyring
+    await this._keyringController.removeAccount(address);
+
+    const updatedKeyringAccounts = keyring ? await keyring.getAccounts() : {};
+
+    if (updatedKeyringAccounts?.length === 0) {
+      keyring.destroy?.();
+    }
+
+    return address;
   }
 
   /**
@@ -320,10 +364,73 @@ class KeyringMananger extends EventEmitter {
   }
 
   /**
+   * Submits a user's encryption key to log the user in via login token
+   */
+  async submitEncryptionKey(): Promise<void> {
+    try {
+      const {loginToken, loginSalt} = await browser.storage.session.get(['loginToken', 'loginSalt']);
+
+      if (loginToken && loginSalt) {
+        const {vault} = this._keyringController.store.getState();
+        const jsonVault = JSON.parse(vault);
+
+        if (jsonVault.salt !== loginSalt) {
+          console.warn('submitEncryptionKey: Stored salt and vault salt do not match');
+
+          await this.clearLoginArtifacts();
+
+          return;
+        }
+
+        await this._keyringController.submitEncryptionKey(loginToken, loginSalt);
+      }
+    } catch (err) {
+      // If somehow this login token doesn't work properly,
+      // remove it and the user will get shown back to the unlock screen
+      await this.clearLoginArtifacts();
+
+      throw err;
+    }
+  }
+
+  async clearLoginArtifacts() {
+    await browser.storage.session.remove(['loginToken', 'loginSalt']);
+  }
+
+  /**
    * @returns {boolean} Whether the extension is unlocked.
    */
   public isUnlocked(): boolean {
     return this._keyringController.memStore.getState().isUnlocked;
+  }
+
+  /**
+   * 获取私钥
+   * @param {string} address 地址
+   * @param {string} password 密码
+   * @returns {string}
+   */
+  async getPrivateKey(address: string, password: string): Promise<string> {
+    await this.verifyPassword(password);
+
+    // 解决密码验证通过，但账户为空的情况
+    await this._keyringController.submitPassword(password);
+
+    return this._keyringController.exportAccount(address, password);
+  }
+
+  /**
+   * 获取助记词
+   * @param {string} password 密码
+   * @returns {string}
+   */
+  async getMnemonicWords(password: string): Promise<string> {
+    await this.verifyPassword(password);
+
+    const mnemonic = await this.verifySeedPhrase();
+    const mnemonicWords = Buffer.from(mnemonic).toString('utf8');
+
+    return mnemonicWords;
   }
 
   /**
@@ -362,35 +469,7 @@ class KeyringMananger extends EventEmitter {
   public async getAccounts(): Promise<string[]> {
     const accounts = await this._keyringController.getAccounts();
 
-    return accounts;
-  }
-
-  /**
-   * Submits a user's encryption key to log the user in via login token
-   */
-  async submitEncryptionKey() {
-    // try {
-    //   const {loginToken, loginSalt} = await browser.storage.session.get(['loginToken', 'loginSalt']);
-    //   if (loginToken && loginSalt) {
-    //     const {vault} = this.keyringController.store.getState();
-    //     const jsonVault = JSON.parse(vault);
-    //     if (jsonVault.salt !== loginSalt) {
-    //       console.warn('submitEncryptionKey: Stored salt and vault salt do not match');
-    //       await this.clearLoginArtifacts();
-    //       return;
-    //     }
-    //     await this._keyringController.submitEncryptionKey(loginToken, loginSalt);
-    //   }
-    // } catch (e) {
-    //   // If somehow this login token doesn't work properly,
-    //   // remove it and the user will get shown back to the unlock screen
-    //   await this.clearLoginArtifacts();
-    //   throw e;
-    // }
-  }
-
-  async clearLoginArtifacts() {
-    await browser.storage.session.remove(['loginToken', 'loginSalt']);
+    return Array.isArray(accounts) ? accounts : [];
   }
 
   /**

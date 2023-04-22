@@ -1,0 +1,35 @@
+$prefixCls: widget-modal;
+
+.widget-modal {
+  @apply fixed inset-0 z-50 flex items-center justify-center;
+  &_mask {
+    @apply fixed inset-0 bg-black/20 backdrop-blur-sm transition-opacity duration-[var(--animation-duration)];
+  }
+  &_container {
+    @apply z-10 mx-3 sm:mx-0;
+  }
+  &_mask,
+  &_container {
+    opacity: 0;
+  }
+  &-enter-active,
+  &-enter-done,
+  &-exit {
+    .#{$prefixCls}_mask {
+      opacity: 1;
+    }
+    .#{$prefixCls}_container {
+      opacity: 1;
+    }
+  }
+  &-enter,
+  &-exit-active,
+  &-exit-done {
+    .#{$prefixCls}_mask {
+      opacity: 0;
+    }
+    .#{$prefixCls}_container {
+      opacity: 0;
+    }
+  }
+}

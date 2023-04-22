@@ -13,6 +13,12 @@ import IconPlusCircle from './plus-circle.svg';
 import IconShuffle from './shuffle.svg';
 import IconUser from './user.svg';
 import IconSettings from './settings.svg';
+import IconTrash from './trash.svg';
+import IconArrowRight from './arrow-right.svg';
+import IconCopy from './copy.svg';
+import IconAlertCircle from './alert-circle.svg';
+import IconCheckCircle from './check-circle.svg';
+import IconXCircle from './x-circle.svg';
 import picOnboardingDesktop from './onboarding-desktop.svg?url';
 import picOnboardingIdea from './onboarding-idea.svg?url';
 import picOnboardingMobile from './onboarding-mobile.svg?url';
@@ -34,6 +40,12 @@ const Assets = {
   IconShuffle,
   IconUser,
   IconSettings,
+  IconTrash,
+  IconArrowRight,
+  IconCopy,
+  IconAlertCircle,
+  IconCheckCircle,
+  IconXCircle,
   picOnboardingDesktop,
   picOnboardingIdea,
   picOnboardingMobile,

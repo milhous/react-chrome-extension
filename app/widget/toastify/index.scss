@@ -1,0 +1,37 @@
+.Toastify {
+  .Toastify__toast-container {
+    @apply w-fit pt-[env(safe-area-inset-top)];
+
+    &--top-right {
+      @apply top-3 right-[10px];
+    }
+
+    &--top-center {
+      @apply top-3 left-1/2 -translate-x-1/2;
+    }
+  }
+
+  .widget-toastify {
+    @apply relative m-0 mb-3 box-border flex min-h-[56px] w-[351px] items-center justify-center overflow-hidden rounded-2xl bg-midnight-blue p-4 pr-[50px] text-[15px] leading-6 text-white shadow-lg;
+
+    .Toastify__toast-body {
+      @apply p-0;
+    }
+
+    &_content {
+      display: flex;
+
+      svg {
+        @apply mr-2.5 h-6 w-6 min-w-[24px] text-white;
+      }
+
+      p {
+        @apply m-0 p-0;
+      }
+    }
+
+    &_close {
+      @apply absolute right-4 top-4 text-white opacity-100 h-6 w-6;
+    }
+  }
+}

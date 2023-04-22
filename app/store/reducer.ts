@@ -11,6 +11,7 @@ export const initialState: IAppState = {
   isUnlocked: false,
   env: '',
   address: '',
+  accounts: [],
   mnemonicWords: '',
   privateKey: '',
 };
