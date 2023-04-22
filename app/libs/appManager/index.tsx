@@ -30,7 +30,7 @@ interface IAppManager extends EventEmitter {
   removeAccount(address: string): Promise<void>;
   lock(): Promise<void>;
   unlock(password: string): Promise<void>;
-  getMnemonicWords(): Promise<void>;
+  getMnemonicWords(password: string): Promise<void>;
   getPrivateKey(address: string, password: string): Promise<void>;
   getState(): IAppState;
   clearPrivateInfo(): void;
@@ -199,9 +199,8 @@ class AppManager extends EventEmitter {
   }
 
   // 获取助记词
-  async getMnemonicWords(): Promise<void> {
-    const mnemonic = await keyringMananger.verifySeedPhrase();
-    const mnemonicWords = Buffer.from(mnemonic).toString('utf8');
+  async getMnemonicWords(password: string): Promise<void> {
+    const mnemonicWords = await keyringMananger.getMnemonicWords(password);
 
     this._updateState({
       mnemonicWords,
@@ -215,7 +214,7 @@ class AppManager extends EventEmitter {
    * @returns {string}
    */
   async getPrivateKey(address: string, password: string): Promise<void> {
-    const privateKey = await keyringMananger.exportAccount(address, password);
+    const privateKey = await keyringMananger.getPrivateKey(address, password);
 
     this._updateState({
       privateKey,

@@ -8,7 +8,7 @@ import {IWidgetModalProps} from './types';
 import './index.scss';
 
 // Widget - Modal
-const WidgetModal = (props: IWidgetModalProps): JSX.Element => {
+export default function WidgetModal(props: IWidgetModalProps) {
   const {className = '', isActive, disableMaskClick = true, onShow, onClose, children} = props;
   const nodeRef = useRef(null);
 
@@ -46,6 +46,4 @@ const WidgetModal = (props: IWidgetModalProps): JSX.Element => {
       </CSSTransition>
     </WidgetPortal>
   );
-};
-
-export default WidgetModal;
+}

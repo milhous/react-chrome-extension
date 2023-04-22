@@ -20,15 +20,15 @@ interface IFormInput {
   password: string;
 }
 
-const PrivateKeyWarning = () => {
-  return <p>警告：切勿泄露此密钥。任何拥有您私钥的人都可以窃取您账户中持有的任何资产。</p>;
+const MnemonicWordsWarning = () => {
+  return <p>警告：确保没有人在看您的屏幕。任何拥有您助记词的人对您的钱包和资金的完整访问权限。</p>;
 };
 
-const PrivateKeyResult = (props: {privateKey: string; onClose: () => void}) => {
-  const {privateKey, onClose} = props;
+const MnemonicWordsResult = (props: {mnemonicWords: string; onClose: () => void}) => {
+  const {mnemonicWords, onClose} = props;
 
   const handleCopy = async () => {
-    await copyText(privateKey);
+    await copyText(mnemonicWords);
 
     toast.success('复制成功');
   };
@@ -36,11 +36,11 @@ const PrivateKeyResult = (props: {privateKey: string; onClose: () => void}) => {
   return (
     <div className="mt-4 space-y-4">
       <dl className="cursor-pointer text-base" onClick={handleCopy}>
-        <dt className="text-gray">这是您的私钥（点击以复制）</dt>
-        <dd className="mt-1 break-all text-midnight-blue">{privateKey}</dd>
+        <dt className="text-gray">这是您的助记词（点击以复制）</dt>
+        <dd className="mt-1 break-all text-midnight-blue">{mnemonicWords}</dd>
       </dl>
-      <WidgetQRCode text={privateKey} />
-      <PrivateKeyWarning />
+      <WidgetQRCode text={mnemonicWords} />
+      <MnemonicWordsWarning />
       <button className="app-btn_primary" onClick={onClose}>
         完成
       </button>
@@ -48,8 +48,8 @@ const PrivateKeyResult = (props: {privateKey: string; onClose: () => void}) => {
   );
 };
 
-const PrivateKeyForm = (props: {address: string; onClose: () => void}) => {
-  const {address, onClose} = props;
+const MnemonicWordsForm = (props: {onClose: () => void}) => {
+  const {onClose} = props;
   const {
     register,
     handleSubmit,
@@ -64,10 +64,9 @@ const PrivateKeyForm = (props: {address: string; onClose: () => void}) => {
 
   const onSubmit: SubmitHandler<IFormInput> = data => {
     messageManager.sendMessage({
-      type: MESSAGE_TYPE.GET_PRIVATE_KEY,
+      type: MESSAGE_TYPE.GET_MNEMONIC_PHRASE,
       payload: {
         password: deferredPassword,
-        address,
       },
     });
   };
@@ -111,7 +110,7 @@ const PrivateKeyForm = (props: {address: string; onClose: () => void}) => {
               {errors?.password?.type === 'minLength' && '密码长度不足'}
             </p>
           </div>
-          <PrivateKeyWarning />
+          <MnemonicWordsWarning />
           <ul className="flex items-center justify-center space-x-4">
             <li>
               <button className="app-btn_outline !w-[140px]" type="button" onClick={onClose}>
@@ -130,10 +129,10 @@ const PrivateKeyForm = (props: {address: string; onClose: () => void}) => {
   );
 };
 
-export default function UIModalAccountPrivateKey() {
-  const {visible, setVisible, payload} = useModal(MODAL_TYPE.ACCOUNT_PRIVATE_KEY);
-  const privateKey = useSelector<IAppStoreState>(state => {
-    return state.app.privateKey;
+export default function UIModalAccountMnemonicWords() {
+  const {visible, setVisible, payload} = useModal(MODAL_TYPE.ACCOUNT_MNEMONIC_WORDS);
+  const mnemonicWords = useSelector<IAppStoreState>(state => {
+    return state.app.mnemonicWords;
   }) as string;
 
   // 关闭
@@ -142,25 +141,22 @@ export default function UIModalAccountPrivateKey() {
 
     messageManager.sendMessage({
       type: MESSAGE_TYPE.CLEAR_PRIVATE_DATA,
-      payload: {
-        password: '12345678',
-      },
     });
   };
 
   return (
     <WidgetModal className="ui-modal" isActive={visible}>
-      <div className="modal-content modal-account-privateKey">
-        <h3 className="modal-content_title">显示私钥</h3>
+      <div className="modal-content modal-account-mnemonicWords">
+        <h3 className="modal-content_title">显示助记词</h3>
         <div className="modal-content_box">
           <dl className="text-base">
-            <dt className="text-gray">Account 1</dt>
-            <dd className="mt-1 break-all text-midnight-blue">{payload.address}</dd>
+            <dt className="text-gray">Milhous 是非托管钱包。</dt>
+            <dd className="mt-1 break-all text-midnight-blue">这意味着您是自己的助记词（SRP） 的所有者。</dd>
           </dl>
-          {privateKey === '' ? (
-            <PrivateKeyForm address={payload.address} onClose={handleClose} />
+          {mnemonicWords === '' ? (
+            <MnemonicWordsForm onClose={handleClose} />
           ) : (
-            <PrivateKeyResult privateKey={privateKey} onClose={handleClose} />
+            <MnemonicWordsResult mnemonicWords={mnemonicWords} onClose={handleClose} />
           )}
         </div>
         <button className="app-btn_icon modal-btn_close" onClick={handleClose}>

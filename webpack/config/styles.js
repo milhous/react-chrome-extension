@@ -5,6 +5,8 @@ import {createRequire} from 'module';
 const require = createRequire(import.meta.url);
 
 // 正则表达式
+const cssRegex = /\.css$/;
+const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.s[ac]ss$/;
 const sassModuleRegex = /\.module\.s[ac]ss$/;
 
@@ -41,6 +43,17 @@ export default function styles(isDev) {
   return {
     module: {
       rules: [
+        // css
+        {
+          test: cssRegex,
+          exclude: cssModuleRegex,
+          use: [getStyleLoaderConfig(isDev), getCssLoaderConfig(isDev), 'postcss-loader'],
+        },
+        // css module
+        {
+          test: cssModuleRegex,
+          use: [getStyleLoaderConfig(isDev), getCssLoaderConfig(isDev, true), 'postcss-loader'],
+        },
         // sass
         {
           test: sassRegex,

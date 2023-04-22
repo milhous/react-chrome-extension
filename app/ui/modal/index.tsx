@@ -7,6 +7,8 @@ import './index.scss';
 
 // 账户 - 私钥
 const UIModalAccountPrivateKey = lazy(() => import('./content/AccountPrivateKey'));
+// 账户 - 助记词
+const UIModalAccountMnemonicWords = lazy(() => import('./content/AccountMnemonicWords'));
 
 /**
  * 显示弹层
@@ -42,6 +44,7 @@ const UIModal = () => {
   return (
     <Suspense>
       <UIModalAccountPrivateKey />
+      <UIModalAccountMnemonicWords />
     </Suspense>
   );
 };

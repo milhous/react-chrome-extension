@@ -25,14 +25,14 @@ interface IKeyringMananger extends EventEmitter {
   verifyPassword(password: string): Promise<void>;
   verifySeedPhrase(): Promise<number[]>;
   verifyAccounts(createdAccounts: string[], seedPhrase: Buffer): Promise<void>;
-  exportAccount(address: string, password: string): Promise<string>;
   removeAccount(address: string): Promise<string>;
   submitPassword(password: string): Promise<object>;
   submitEncryptionKey(): Promise<void>;
   isUnlocked(): boolean;
   setLocked(): Promise<void>;
+  getPrivateKey(address: string, password: string): Promise<string>;
+  getMnemonicWords(password: string): Promise<string>;
   getPrimaryKeyringMnemonic(): any;
-  getPrimaryKey(): Promise<string>;
   getAccounts(): Promise<string[]>;
   getState(): any;
   getMemState(): any;
@@ -310,20 +310,6 @@ class KeyringMananger extends EventEmitter {
   }
 
   /**
-   * Export Account
-   * @param {string} address - 地址
-   * @param {string} password - 密码
-   */
-  public async exportAccount(address: string, password: string): Promise<string> {
-    await this.verifyPassword(password);
-
-    // 解决密码验证通过，但账户为空的情况
-    await this._keyringController.submitPassword(password);
-
-    return this._keyringController.exportAccount(address, password);
-  }
-
-  /**
    * Removes an account from state / storage.
    *
    * @param {string} address - A hex address
@@ -416,6 +402,35 @@ class KeyringMananger extends EventEmitter {
    */
   public isUnlocked(): boolean {
     return this._keyringController.memStore.getState().isUnlocked;
+  }
+
+  /**
+   * 获取私钥
+   * @param {string} address 地址
+   * @param {string} password 密码
+   * @returns {string}
+   */
+  async getPrivateKey(address: string, password: string): Promise<string> {
+    await this.verifyPassword(password);
+
+    // 解决密码验证通过，但账户为空的情况
+    await this._keyringController.submitPassword(password);
+
+    return this._keyringController.exportAccount(address, password);
+  }
+
+  /**
+   * 获取助记词
+   * @param {string} password 密码
+   * @returns {string}
+   */
+  async getMnemonicWords(password: string): Promise<string> {
+    await this.verifyPassword(password);
+
+    const mnemonic = await this.verifySeedPhrase();
+    const mnemonicWords = Buffer.from(mnemonic).toString('utf8');
+
+    return mnemonicWords;
   }
 
   /**

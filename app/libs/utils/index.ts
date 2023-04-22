@@ -31,3 +31,16 @@ export function getThumbAccount(account: string): string {
 
   return res;
 }
+
+/**
+ * 复制文案
+ * @param {string} text 文案
+ */
+export async function copyText(text = ''): Promise<void> {
+  try {
+    await navigator.clipboard.writeText(text);
+    console.log('Copied to clipboard');
+  } catch (err) {
+    console.error('Failed to copy: ', err);
+  }
+}

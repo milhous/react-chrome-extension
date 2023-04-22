@@ -1,7 +1,6 @@
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useSelector} from 'react-redux';
-import QRCode from 'qrcode';
 
 import Assets from '@assets/index';
 import {MESSAGE_TYPE} from '@libs/constants/app';
@@ -12,10 +11,6 @@ import UIHeader from '@ui/header';
 import UINavigation from '@ui/navigation';
 
 import './index.scss';
-
-const qrCodeOpts = {
-  margin: 0,
-};
 
 // 地址
 // 0x126b8528ea6966f0089554fed347d7038139185e
@@ -62,7 +57,6 @@ export default function PageWallet() {
       privateKey: state.app.privateKey,
     };
   }) as Partial<IAppState>;
-  const [qrcode, setQrcode] = useState<string>('');
 
   useEffect(() => {
     if (!isUnlocked) {

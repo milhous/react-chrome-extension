@@ -75,7 +75,7 @@ function connectRemote(remotePort: Runtime.Port) {
         break;
       }
       case MESSAGE_TYPE.GET_MNEMONIC_PHRASE: {
-        await appManager.getMnemonicWords();
+        await appManager.getMnemonicWords(msg.payload.password);
 
         break;
       }
