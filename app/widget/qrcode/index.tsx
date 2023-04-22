@@ -16,7 +16,6 @@ const qrCodeOpts = {
 export default function WidgetQRCode(props: IWidgetQRCodeProps) {
   const {className = '', sizes = '160', text = ''} = props;
   const [qrcode, setQrcode] = useState<string>('');
-  const classSizes = `h-[${sizes}px] w-[${sizes}px] min-h-[${sizes}px] min-w-[${sizes}px]`;
 
   useEffect(() => {
     if (!!text) {
@@ -27,7 +26,9 @@ export default function WidgetQRCode(props: IWidgetQRCodeProps) {
   }, [text]);
 
   return (
-    <div className={classnames('mx-auto box-border rounded-xl bg-white p-3 shadow', classSizes, className)}>
+    <div
+      style={{width: `${sizes}px`, height: `${sizes}px`, minWidth: `${sizes}px`, minHeight: `${sizes}px`}}
+      className={classnames('mx-auto box-border rounded-xl bg-white p-3 shadow', className)}>
       <img className="block h-full w-full" src={qrcode} />
     </div>
   );
