@@ -8,7 +8,7 @@ import appManager from '@libs/appManager';
 let isClientOpen = false;
 let popupIsOpen = false;
 const notificationIsOpen = false;
-const openMetamaskTabsIDs = {};
+const openTabsIDs = new Set<string>();
 
 /**
  * Connects a Port to the MetaMask controller via a multiplexed duplex stream.
@@ -25,6 +25,8 @@ function connectRemote(remotePort: Runtime.Port) {
   const onUpdate = () => {
     const appState = appManager.getState();
 
+    console.log('openTabsIDs', [...openTabsIDs]);
+
     remotePort.postMessage({type: MESSAGE_TYPE.UPDATE_STORE_DATA, payload: appState});
   };
 
@@ -32,6 +34,8 @@ function connectRemote(remotePort: Runtime.Port) {
 
   remotePort.onMessage.addListener(async msg => {
     console.log('background receive msg', msg);
+
+    appManager.updateTabOpenState(openTabsIDs.size > 0);
 
     switch (msg.type) {
       case MESSAGE_TYPE.WORKER_KEEP_ALIVE_MESSAGE:
@@ -102,10 +106,12 @@ function connectRemote(remotePort: Runtime.Port) {
 
   if (processName === ENVIRONMENT_TYPE[ENVIRONMENT_TYPE.FULLSCREEN]) {
     const tabId = remotePort.sender.tab.id;
-    openMetamaskTabsIDs[tabId] = true;
+
+    openTabsIDs.add(tabId);
 
     endOfStream(portStream, () => {
-      delete openMetamaskTabsIDs[tabId];
+      openTabsIDs.delete(tabId);
+
       isClientOpen = false;
 
       appManager.off('update', onUpdate);

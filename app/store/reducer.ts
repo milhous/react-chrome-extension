@@ -9,6 +9,7 @@ export const initialState: IAppState = {
   isFirstTime: false,
   isInitialized: false,
   isUnlocked: false,
+  isTabOpen: false,
   env: '',
   address: '',
   accounts: [],

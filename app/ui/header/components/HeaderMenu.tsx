@@ -85,10 +85,16 @@ export default function HeaderMenu() {
   const match = useMatch(ROUTES.SETTINGS);
   const {
     isUnlocked,
+    isTabOpen,
     env,
     address = '',
   } = useSelector<IAppStoreState>(state => {
-    return {isUnlocked: state.app.isUnlocked, env: state.app.env, address: state.app.address};
+    return {
+      isUnlocked: state.app.isUnlocked,
+      isTabOpen: state.app.isTabOpen,
+      env: state.app.env,
+      address: state.app.address,
+    };
   }) as Partial<IAppState>;
   const isPopup = env === ENVIRONMENT_TYPE[ENVIRONMENT_TYPE.POPUP];
 
@@ -152,7 +158,7 @@ export default function HeaderMenu() {
                 账户详情
               </NavLink>
             </li>
-            {isPopup && <ExpandView />}
+            {!isTabOpen && isPopup && <ExpandView />}
             <RemoveAccount address={address} />
             <li>
               <NavLink to={ROUTES.SETTINGS} className={({isActive}) => (isActive ? 'active' : '')}>

@@ -10,8 +10,8 @@ import Unlock from './components/Unlock';
 import CreateAccount from './components/CreateAccount';
 
 export default function PageWelcome() {
-  const {isInitialized, env} = useSelector<IAppStoreState>(state => {
-    return {isInitialized: state.app.isInitialized, env: state.app.env};
+  const {isInitialized, isTabOpen, env} = useSelector<IAppStoreState>(state => {
+    return {isInitialized: state.app.isInitialized, isTabOpen: state.app.isTabOpen, env: state.app.env};
   }) as Partial<IAppState>;
   const isPopup = env === ENVIRONMENT_TYPE[ENVIRONMENT_TYPE.POPUP];
 
@@ -28,7 +28,7 @@ export default function PageWelcome() {
       </dl>
       {isInitialized && <Unlock />}
       {!isInitialized && <CreateAccount />}
-      {isPopup && <WidgetMaximize />}
+      {!isTabOpen && isPopup && <WidgetMaximize />}
       {/* <span className="mt-4 cursor-pointer text-dark-gray">忘记密码了？</span> */}
     </section>
   );

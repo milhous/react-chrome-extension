@@ -20,6 +20,7 @@ import {initialState} from '@store/reducer';
  * @method getPrivateKey 获取私钥
  * @method getState 获取状态
  * @method clearPrivateInfo 清理私有信息（私钥 & 助记词）
+ * @method updateTabState 更新选项卡开启状态
  */
 interface IAppManager extends EventEmitter {
   init(env: string): Promise<void>;
@@ -34,6 +35,7 @@ interface IAppManager extends EventEmitter {
   getPrivateKey(address: string, password: string): Promise<void>;
   getState(): IAppState;
   clearPrivateInfo(): void;
+  updateTabOpenState(state: boolean, isEmit?: boolean): void;
 }
 
 const localStore = new LocalStore();
@@ -235,6 +237,19 @@ class AppManager extends EventEmitter {
       privateKey: '',
       mnemonicWords: '',
     });
+  }
+
+  /**
+   * 更新选项卡开启状态
+   * @param {boolean} state 状态
+   * @param {boolean} isEmit 是否触发更新
+   */
+  updateTabOpenState(state: boolean, isEmit = false): void {
+    this._state.isTabOpen = state;
+
+    if (isEmit) {
+      this.emit('update');
+    }
   }
 
   // 更新状态
