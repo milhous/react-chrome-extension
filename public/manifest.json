@@ -1,11 +1,10 @@
 {
-    "version": "1.0.4",
+    "version": "1.0.5",
     "manifest_version": 3,
     "name": "Milhous",
     "description": "This is a Chrome extension built with React and TypeScript",
     "content_security_policy": {
-        "extension_pages": "script-src 'self' 'wasm-unsafe-eval';"
-        
+        "extension_pages": "script-src 'self' 'wasm-unsafe-eval';" 
     },
     "background": {
         "service_worker": "app.js",
